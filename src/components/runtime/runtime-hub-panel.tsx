@@ -97,7 +97,7 @@ const itemVariants = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: [0.25, 0.4, 0.25, 1] },
+    transition: { duration: 0.4, ease: [0.25, 0.4, 0.25, 1] as const },
   },
 };
 
@@ -879,7 +879,7 @@ function ProviderCard({
       initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.97 }}
-      transition={{ duration: 0.3, ease: [0.25, 0.4, 0.25, 1] }}
+      transition={{ duration: 0.3, ease: [0.25, 0.4, 0.25, 1] as const }}
     >
       <Card className="h-full hover:shadow-md transition-all duration-200 group">
         <CardHeader className="pb-3">

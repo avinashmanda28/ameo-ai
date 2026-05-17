@@ -360,3 +360,32 @@ export const WORKSPACE_MODES: { key: WorkspaceMode; label: string; icon: string;
   { key: 'strategy', label: 'Strategy', icon: 'Compass', description: 'Plan, analyze, and decide strategically' },
   { key: 'governance', label: 'Governance', icon: 'Shield', description: 'Enforce rules, audit, and secure the system' },
 ];
+
+// ─── Phase 1.5: Runtime Execution ───
+
+export type ExecutionRunStatus = 'pending' | 'awaiting_approval' | 'approved' | 'rejected' | 'executing' | 'completed' | 'failed' | 'timed_out';
+export type ArtifactType = 'code' | 'report' | 'plan' | 'spec' | 'analysis' | 'architecture' | 'general';
+export type ArtifactStatus = 'draft' | 'verified' | 'approved' | 'rejected' | 'archived';
+export type ApprovalStatus = 'pending' | 'approved' | 'rejected' | 'expired';
+export type ApprovalRequestType = 'runtime_execution' | 'deployment' | 'data_export' | 'sensitive_action';
+
+export const EXECUTION_RUN_STATUS_COLORS: Record<ExecutionRunStatus, string> = {
+  pending: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+  awaiting_approval: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  approved: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  rejected: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+  executing: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
+  completed: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  failed: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+  timed_out: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+};
+
+export const ARTIFACT_TYPE_COLORS: Record<ArtifactType, string> = {
+  code: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
+  report: 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400',
+  plan: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
+  spec: 'bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-400',
+  analysis: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400',
+  architecture: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
+  general: 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400',
+};

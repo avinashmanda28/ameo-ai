@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useWorkspaceStore } from '@/lib/store/workspace-store';
+import { useExecutionStore } from '@/lib/store/execution-store';
 import type { ApiResponse } from '@/lib/types';
 import type {
   Workspace,
@@ -18,6 +19,7 @@ import type {
 import { WorkspaceSidebar } from './workspace-sidebar';
 import { WorkspaceHeader } from './workspace-header';
 import { WorkspaceContent } from './workspace-content';
+import { ApprovalBanner } from '@/components/approvals/approval-banner';
 
 // ─── Data Fetching ─────────────────────────────────────────────
 
@@ -78,6 +80,9 @@ export function WorkspaceShell() {
         agents,
         ratings,
         auditLogs,
+        executions,
+        artifacts,
+        approvals,
       ] = await Promise.all([
         safeFetch<Company[]>('/api/company', 'companies'),
         safeFetch<Workflow[]>('/api/workflows', 'workflows'),
@@ -86,6 +91,9 @@ export function WorkspaceShell() {
         safeFetch<Agent[]>('/api/agents', 'agents'),
         safeFetch<BuildRating[]>('/api/ratings', 'ratings'),
         safeFetch<AuditLog[]>('/api/governance/audit', 'audit logs'),
+        safeFetch<unknown[]>('/api/execution', 'executions'),
+        safeFetch<unknown[]>('/api/artifacts', 'artifacts'),
+        safeFetch<unknown[]>('/api/approvals?status=pending', 'approvals'),
       ]);
 
       if (cancelled) return;
@@ -97,6 +105,12 @@ export function WorkspaceShell() {
       if (agents) store.setAgents(agents);
       if (ratings) store.setBuildRatings(ratings);
       if (auditLogs) store.setAuditLogs(auditLogs);
+
+      // Phase 1.5 execution store
+      const executionStore = useExecutionStore.getState();
+      if (executions) executionStore.setExecutions(executions as any);
+      if (artifacts) executionStore.setArtifacts(artifacts as any);
+      if (approvals) executionStore.setPendingApprovals(approvals as any);
     }
 
     fetchAll();
@@ -118,6 +132,7 @@ export function WorkspaceShell() {
         <WorkspaceHeader />
         <WorkspaceContent />
       </SidebarInset>
+      <ApprovalBanner />
     </SidebarProvider>
   );
 }

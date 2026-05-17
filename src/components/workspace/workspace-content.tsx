@@ -10,6 +10,9 @@ import {
   Bot,
   TerminalSquare,
   BarChart3,
+  Zap,
+  FileCode,
+  Activity,
 } from 'lucide-react';
 import { useWorkspaceStore } from '@/lib/store/workspace-store';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -21,6 +24,9 @@ import { RuntimeHubPanel } from '@/components/runtime/runtime-hub-panel';
 import { AgentPanel } from '@/components/agents/agent-panel';
 import { ReportsPanel } from '@/components/reports/reports-panel';
 import { TerminalPanel } from '@/components/reports/terminal-panel';
+import { ExecutionPanel } from '@/components/execution/execution-panel';
+import { ArtifactPanel } from '@/components/artifacts/artifact-panel';
+import { RuntimeMetricsPanel } from '@/components/execution/runtime-metrics-panel';
 
 // ─── Panel Configuration ───────────────────────────────────────
 
@@ -40,6 +46,9 @@ const PANEL_CONFIGS: PanelConfig[] = [
   { key: 'agents', label: 'Agents', description: 'AI agent fleet and status monitoring', icon: Bot },
   { key: 'terminal', label: 'Terminal', description: 'System logs and terminal output', icon: TerminalSquare },
   { key: 'reports', label: 'Reports', description: 'Build ratings and analytical reports', icon: BarChart3 },
+  { key: 'execution', label: 'Execution', description: 'Runtime prompt execution and response viewer', icon: Zap },
+  { key: 'artifacts', label: 'Artifacts', description: 'Claude-style artifact viewer and manager', icon: FileCode },
+  { key: 'runtime-metrics', label: 'Runtime Metrics', description: 'Operational metrics and performance dashboard', icon: Activity },
 ];
 
 const CONFIG_MAP = new Map(PANEL_CONFIGS.map((p) => [p.key, p]));
@@ -141,6 +150,21 @@ export function WorkspaceContent() {
   // Real implementation for terminal
   if (activePanel === 'terminal') {
     return <TerminalPanel />;
+  }
+
+  // Real implementation for execution
+  if (activePanel === 'execution') {
+    return <ExecutionPanel />;
+  }
+
+  // Real implementation for artifacts
+  if (activePanel === 'artifacts') {
+    return <ArtifactPanel />;
+  }
+
+  // Real implementation for runtime-metrics
+  if (activePanel === 'runtime-metrics') {
+    return <RuntimeMetricsPanel />;
   }
 
   // Placeholder for all other panels

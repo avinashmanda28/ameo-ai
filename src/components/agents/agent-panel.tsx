@@ -118,13 +118,13 @@ const cardVariants = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.04, duration: 0.35, ease: 'easeOut' },
+    transition: { delay: i * 0.04, duration: 0.35, ease: 'easeOut' as const },
   }),
 };
 
 const detailVariants = {
   hidden: { opacity: 0, x: 20 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: 'easeOut' } },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: 'easeOut' as const } },
   exit: { opacity: 0, x: -20, transition: { duration: 0.2 } },
 };
 

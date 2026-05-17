@@ -129,7 +129,7 @@ const itemVariants = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.3, ease: [0.25, 0.4, 0.25, 1] },
+    transition: { duration: 0.3, ease: [0.25, 0.4, 0.25, 1] as const },
   },
 };
 
@@ -139,13 +139,13 @@ const expandVariants = {
     opacity: 1,
     height: 'auto',
     overflow: 'hidden',
-    transition: { duration: 0.25, ease: [0.25, 0.4, 0.25, 1] },
+    transition: { duration: 0.25, ease: [0.25, 0.4, 0.25, 1] as const },
   },
   exit: {
     opacity: 0,
     height: 0,
     overflow: 'hidden',
-    transition: { duration: 0.2, ease: [0.25, 0.4, 0.25, 1] },
+    transition: { duration: 0.2, ease: [0.25, 0.4, 0.25, 1] as const },
   },
 };
 
@@ -974,7 +974,7 @@ export function CompanyGraphPanel() {
   );
 
   // ── Render ──
-  if (companiesLoading && !initialized) {
+  if (companiesLoading && companies.length === 0) {
     return <LoadingGraph />;
   }
 

@@ -15,9 +15,10 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { useWorkspaceStore } from '@/lib/store/workspace-store';
-import { WORKSPACE_MODES, type WorkspaceMode, AGENT_STATUS_COLORS } from '@/lib/types';
+import { WORKSPACE_MODES, type WorkspaceMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Check, Pencil, X } from 'lucide-react';
+import { useExecutionStore } from '@/lib/store/execution-store';
 
 // ─── Panel labels map ──────────────────────────────────────────
 
@@ -30,6 +31,9 @@ const PANEL_LABELS: Record<string, string> = {
   agents: 'Agents',
   terminal: 'Terminal',
   reports: 'Reports',
+  execution: 'Execution',
+  artifacts: 'Artifacts',
+  'runtime-metrics': 'Runtime Metrics',
 };
 
 const PANEL_GROUPS: Record<string, string> = {
@@ -38,9 +42,12 @@ const PANEL_GROUPS: Record<string, string> = {
   'runtime-hub': 'SYSTEMS',
   workflows: 'SYSTEMS',
   governance: 'SYSTEMS',
+  execution: 'SYSTEMS',
+  artifacts: 'SYSTEMS',
   agents: 'INTELLIGENCE',
   terminal: 'INTELLIGENCE',
   reports: 'INTELLIGENCE',
+  'runtime-metrics': 'INTELLIGENCE',
 };
 
 const MODE_BADGE_CLASSES: Record<WorkspaceMode, string> = {
@@ -165,6 +172,26 @@ function AgentStatusIndicators() {
   );
 }
 
+// ─── Execution Indicator ──────────────────────────────────────
+
+function ExecutionIndicator() {
+  const isExecuting = useExecutionStore((s) => s.isExecuting);
+
+  if (!isExecuting) return null;
+
+  return (
+    <div className="flex items-center gap-1.5">
+      <span className="relative flex h-2 w-2">
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+        <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
+      </span>
+      <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium hidden sm:inline">
+        Executing...
+      </span>
+    </div>
+  );
+}
+
 // ─── Header Component ──────────────────────────────────────────
 
 export function WorkspaceHeader() {
@@ -213,6 +240,11 @@ export function WorkspaceHeader() {
         >
           {modeLabel}
         </Badge>
+
+        <Separator orientation="vertical" className="h-5" />
+
+        {/* Execution indicator */}
+        <ExecutionIndicator />
 
         <Separator orientation="vertical" className="h-5" />
 

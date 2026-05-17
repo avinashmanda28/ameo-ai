@@ -14,6 +14,8 @@ import {
   Hammer,
   Activity,
   Compass,
+  Zap,
+  FileCode,
 } from 'lucide-react';
 import { useWorkspaceStore } from '@/lib/store/workspace-store';
 import { WORKSPACE_MODES, type WorkspaceMode } from '@/lib/types';
@@ -49,9 +51,12 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'runtime-hub', label: 'Runtime Hub', icon: Cpu, group: 'SYSTEMS' },
   { key: 'workflows', label: 'Workflows', icon: Workflow, group: 'SYSTEMS' },
   { key: 'governance', label: 'Governance', icon: Shield, group: 'SYSTEMS' },
+  { key: 'execution', label: 'Execution', icon: Zap, group: 'SYSTEMS' },
+  { key: 'artifacts', label: 'Artifacts', icon: FileCode, group: 'SYSTEMS' },
   { key: 'agents', label: 'Agents', icon: Bot, group: 'INTELLIGENCE' },
   { key: 'terminal', label: 'Terminal', icon: TerminalSquare, group: 'INTELLIGENCE' },
   { key: 'reports', label: 'Reports', icon: BarChart3, group: 'INTELLIGENCE' },
+  { key: 'runtime-metrics', label: 'Runtime Metrics', icon: Activity, group: 'INTELLIGENCE' },
 ];
 
 const NAV_GROUPS = ['OVERVIEW', 'SYSTEMS', 'INTELLIGENCE'] as const;

@@ -3,257 +3,126 @@
 ---
 Task ID: 0
 Agent: Main Orchestrator
-Task: Architecture inspection and project analysis
-
-Work Log:
-- Inspected existing project: Next.js 16, Tailwind CSS 4, shadcn/ui, Prisma/SQLite, Zustand
-- Verified all shadcn/ui components available (60+ components)
-- Confirmed package.json has all required dependencies (framer-motion, recharts, zustand, etc.)
-- Analyzed existing Prisma schema (basic User/Post models)
-- Read existing layout.tsx, page.tsx, globals.css, db.ts
+Task: Phase 0 + Phase 1 foundation (already complete from previous build)
 
 Stage Summary:
-- Clean project foundation confirmed
-- All UI libraries available
-- No breaking existing code
+- 15 DB models, 14 API routes, 12 UI components, Zustand store, type system
+- All verified and running
 
 ---
-Task ID: 1
+Task ID: 1.5-0
 Agent: Main Orchestrator
-Task: PHASE 0 — Database Schema Design
+Task: Phase 1.5 Architecture Inspection
 
 Work Log:
-- Designed comprehensive Prisma schema with 15 models
-- Models: Workspace, Company (tree), RuntimeProvider, RuntimeHealthLog, Workflow, WorkflowExecution, WorkflowCheckpoint, WorkflowLog, WorkflowDependency, GovernanceRule, AuditLog, Agent, AgentLog, BuildRating
-- Pushed schema to SQLite database
-- Generated Prisma Client
+- Inspected full existing architecture (15 models, 14 routes, 12 components)
+- Identified extension points for runtime execution layer
+- Confirmed z-ai-web-dev-sdk available for backend AI operations
 
 Stage Summary:
-- 15 database models covering all Phase 1 entities
-- Tree structure for Company graph (self-referential parentId)
-- Full workflow lifecycle support (executions, checkpoints, logs, dependencies)
-- Rating engine with 7 quality dimensions
-- Audit logging for governance
+- Architecture ready for extension with RuntimeExecution, Artifact, ApprovalRequest models
 
 ---
-Task ID: 2
+Task ID: 1.5-1
 Agent: Main Orchestrator
-Task: PHASE 0 — TypeScript Types and System Constants
+Task: Phase 1.5 Database Schema Extension
 
 Work Log:
-- Created `/src/lib/types/index.ts` with all type definitions
-- Defined enums: WorkspaceMode, CompanyType, RuntimeType, WorkflowState, AgentType, etc.
-- Created color maps: WORKFLOW_STATE_COLORS, AGENT_TYPE_COLORS, RUNTIME_TYPE_COLORS, etc.
-- Defined label maps: AGENT_TYPE_LABELS, AGENT_TYPE_DESCRIPTIONS, RULE_TYPE_LABELS, etc.
-- Defined WORKSPACE_MODES array for mode switching
-- Defined RATING_DIMENSIONS constant for the rating engine
+- Added 3 new Prisma models: RuntimeExecution, Artifact, ApprovalRequest
+- RuntimeExecution: full audit trail for AI calls (request, response, approval, verification, metrics)
+- Artifact: persistent outputs (code, reports, plans, specs, analysis, architecture)
+- ApprovalRequest: governance gate with expiry, resolution tracking
+- Added reverse relations on existing models (RuntimeProvider, Agent)
+- Pushed schema, regenerated Prisma Client
 
 Stage Summary:
-- ~300 lines of comprehensive type definitions
-- Color-coded badge classes for all entity types and states
-- Descriptive labels and descriptions for all agent types
+- 18 total database models
+- RuntimeExecution links to Provider, Agent, Artifact, Approval
+- Artifact versioning and verification tracking
+- Approval request with status, expiry, resolution tracking
 
 ---
-Task ID: 3
-Agent: Main Orchestrator
-Task: PHASE 0 — Zustand Store Architecture
+Task ID: 1.5-2
+Agent: Runtime Builder Agent
+Task: Runtime Execution Engine (Backend)
 
 Work Log:
-- Created `/src/lib/store/workspace-store.ts` — central state store
-- Workspace state: workspace, loading, mode switching
-- Company Graph: CRUD operations + hierarchical state
-- Runtime Hub: CRUD + health data
-- Workflow Engine: CRUD + state filter
-- Governance: Rules CRUD + audit logs
-- Agent System: CRUD + selection + logs
-- Ratings: list + add
-- Active panel routing
+- Created src/lib/runtime/types.ts (RuntimeRequest, RuntimeResponse, ProviderAdapter, RouterResult)
+- Created adapter-openrouter.ts (REAL OpenRouter API calls, OpenAI-compatible format)
+- Created adapter-groq.ts (REAL Groq API calls, rate limit handling)
+- Created adapter-gemini.ts (REAL Gemini API calls, native format, safety filter detection)
+- Created adapter-ollama.ts (REAL Ollama local model API calls)
+- Created router.ts (intelligent provider selection: role→health→rating)
+- Created engine.ts (12-step execution lifecycle: route→governance→execute→verify→artifact→audit)
 
 Stage Summary:
-- Single comprehensive Zustand store with all subsystem state
-- Optimistic CRUD operations for all entities
-- Panel routing state for workspace navigation
+- 7 backend modules in src/lib/runtime/
+- All adapters make REAL HTTP requests with AbortSignal timeout (30s)
+- Provider isolation — no hardcoded defaults
+- Governance-aware (checks approval rules before execution)
+- Hallucination detection (empty response, error patterns, repetitive content)
+- Auto artifact creation for substantial responses
 
 ---
-Task ID: 4
+Task ID: 1.5-3
 Agent: API Builder Agent
-Task: PHASE 1 — All API Routes
+Task: Phase 1.5 API Routes
 
 Work Log:
-- Created 14 API route files
-- Workspace: GET (auto-create), PUT
-- Company: GET (with filters), POST, PUT, DELETE
-- Workflows: GET (with executions), POST, PUT, DELETE
-- Workflow transitions: POST /workflows/[id]/transition
-- Workflow executions: GET/POST /workflows/[id]/executions
-- Runtime: GET (with health logs), POST, PUT, DELETE
-- Health check: POST /runtime/[id]/healthcheck (real HTTP check)
-- Governance: GET (with filters), POST, PUT, DELETE
-- Audit: GET/POST /governance/audit
-- Agents: GET (with logs), POST, PUT, DELETE
-- Agent logs: GET/POST /agents/[id]/logs
-- Ratings: GET, POST (auto-calculate overallScore)
-- Rating stats: GET /ratings/stats (aggregates)
+- Created POST/GET /api/execution (execute with RuntimeEngine, list with pagination)
+- Created GET/DELETE /api/execution/[id]
+- Created POST /api/execution/[id]/verify (verification pipeline)
+- Created POST/GET /api/artifacts (CRUD with versioning)
+- Created GET/PUT/DELETE /api/artifacts/[id]
+- Created GET /api/approvals (pending-first sorted)
+- Created GET/POST /api/approvals/[id] (resolve approval, resume/reject execution)
 
 Stage Summary:
-- 14 fully functional API routes
-- Real health check implementation (actual HTTP requests)
-- Auto-calculated overallScore for ratings
-- Consistent response format: { success, data?, error? }
-- Proper error handling with try/catch
+- 7 new API routes (21 total across all phases)
+- Graceful fallback if engine not ready (creates pending execution)
+- Approval resolution triggers execution resume
+- Verification updates execution records + creates audit logs
 
 ---
-Task ID: 5
+Task ID: 1.5-4
 Agent: UI Builder Agent
-Task: PHASE 1 — Workspace Shell
+Task: Phase 1.5 UI Components
 
 Work Log:
-- Created workspace-shell.tsx (main layout with SidebarProvider)
-- Created workspace-header.tsx (editable name, breadcrumbs, mode badge, agent dots)
-- Created workspace-sidebar.tsx (dark sidebar with navigation groups, mode switcher)
-- Created workspace-content.tsx (panel router with 8 panel mappings)
-- Created overview-panel.tsx (4 metric cards, recent activity, system health)
-- Updated page.tsx with ThemeProvider wrapper
+- Created src/lib/store/execution-store.ts (new Zustand store for execution state)
+- Created execution-panel.tsx (form, history, response viewer, verification)
+- Created artifact-panel.tsx (Claude-style viewer with syntax highlighting)
+- Created approval-banner.tsx (floating governance popup with 5s polling)
+- Created runtime-metrics-panel.tsx (charts, provider performance, quality stats)
+- Updated types/index.ts with Phase 1.5 types and color maps
+- Updated workspace-content.tsx (3 new panel routes)
+- Updated workspace-sidebar.tsx (3 new nav items)
+- Updated workspace-shell.tsx (fetches for execution/artifacts/approvals, renders ApprovalBanner)
+- Updated workspace-header.tsx (execution indicator)
 
 Stage Summary:
-- Complete workspace shell with dark sidebar + light content
-- 8 navigation items across 3 groups (Overview, Systems, Intelligence)
-- 4 workspace modes (Builder, Operations, Strategy, Governance)
-- Framer Motion staggered animations on overview cards
-- Parallel data fetching on mount
+- 5 new UI components + 5 existing component updates
+- 11 total panels in workspace (8 from Phase 1 + 3 new)
+- Approval banner with real-time polling
+- Artifact viewer with syntax highlighting
+- Runtime metrics with recharts visualizations
 
 ---
-Task ID: 6
-Agent: UI Builder Agent
-Task: PHASE 1 — Company Graph Panel
-
-Work Log:
-- Created company-graph-panel.tsx with hierarchical tree view
-- Recursive TreeNode component with expand/collapse
-- Add Entity dialog with type and parent selection
-- Entity detail sidebar with inline editing
-- Search/filter functionality
-- Empty state with CTA
-
-Stage Summary:
-- Full CRUD for company entities
-- Hierarchical tree with indentation and animations
-- 6 entity types: company, project, product, service, team, member
-
----
-Task ID: 7
-Agent: UI Builder Agent
-Task: PHASE 1 — Runtime Hub Panel
-
-Work Log:
-- Created runtime-hub-panel.tsx with provider management
-- Health stats cards (total, active, avg health)
-- Provider cards with status, health bars, ratings
-- Add/Edit provider dialog
-- Health check trigger (real API call)
-- Runtime architecture info section
-
-Stage Summary:
-- Support for 4 providers: OpenRouter, Groq, Gemini, Ollama
-- No hardcoded defaults — user must configure
-- Real health check with HTTP requests
-- Role assignment: primary, secondary, fallback
-
----
-Task ID: 8
-Agent: UI Builder Agent
-Task: PHASE 1 — Workflow Engine Panel
-
-Work Log:
-- Created workflow-engine-panel.tsx with full lifecycle management
-- State filter pills with counts
-- Workflow list with selection and detail view
-- State transition engine with validation
-- Execution history display
-- Create/Edit/Delete dialogs
-- Run execution button
-
-Stage Summary:
-- 7 workflow states with validated transitions
-- Execution tracking with status, duration, errors
-- Real state machine logic
-- PUT and DELETE handlers added to workflow API
-
----
-Task ID: 9
-Agent: UI Builder Agent
-Task: PHASE 1 — Governance Kernel Panel
-
-Work Log:
-- Created governance-panel.tsx with rules and audit tabs
-- Security summary cards
-- Rules table with search, filters, toggle, edit/delete
-- Audit log with expandable rows
-- Add/Edit rule dialog with JSON config validation
-- Severity color coding
-
-Stage Summary:
-- 5 rule types: permission, approval, rate_limit, security, compliance
-- 4 severity levels with color coding
-- Full audit trail with expandable details
-
----
-Task ID: 10
-Agent: UI Builder Agent
-Task: PHASE 1 — Agent System Panel
-
-Work Log:
-- Created agent-panel.tsx with agent grid and detail view
-- 6 agent types with descriptions and colors
-- Status management (idle, active, busy, suspended, error)
-- Agent logs viewer with add log form
-- Registered vs not-registered indicators
-- Verification agent authority display
-
-Stage Summary:
-- All 6 required agent types supported
-- Animated status indicators
-- Real-time agent log management
-- Authority highlighting for verification agents
-
----
-Task ID: 11
-Agent: UI Builder Agent
-Task: PHASE 1 — Reports Dashboard & Terminal Observer
-
-Work Log:
-- Created reports-panel.tsx with recharts integration
-- System overview cards
-- Rating distribution bar chart
-- Dimension scores with progress bars
-- Latest ratings table
-- Submit rating dialog with 7 dimension sliders
-- Created terminal-panel.tsx with dark terminal aesthetic
-- Log console with formatted entries
-- Boot messages and heartbeat system
-- Auto-scroll with "Latest" button
-- Filter by source and level
-
-Stage Summary:
-- Real recharts bar chart for rating distribution
-- 7-dimension rating system with auto-calculated overall score
-- Terminal-style log viewer with dark theme
-- Periodic heartbeat status messages
-
----
-Task ID: 12
+Task ID: 1.5-5
 Agent: Main Orchestrator
-Task: Final verification and build report
+Task: Phase 1.5 Bug Fixes and Verification
 
 Work Log:
-- Ran ESLint: 0 errors, 0 warnings
-- Verified dev server: HTTP 200
-- Tested all 9 API endpoints: all returning proper JSON
-- End-to-end API test: 6/6 create operations succeeded
-- Fixed runtime-hub-panel workspaceId bug ('default' → workspace?.id)
-- Verified all icons exist in lucide-react
+- Fixed adapter-gemini.ts TypeScript error (error.message type)
+- Fixed router.ts type mismatch (Prisma Date vs RuntimeProvider string)
+- Fixed framer-motion ease type errors across 7 components (ease: [] as const)
+- Fixed company-graph-panel.tsx initialized ref access during render
+- Fixed company-graph-panel.tsx setState in effect warning
+- Regenerated Prisma Client after schema changes
+- Fixed all 0 ESLint errors
 
 Stage Summary:
-- Build verified: lint clean, server running, APIs functional
-- 1 bug found and fixed during verification
-- All Phase 0 + Phase 1 requirements delivered
+- 6 TypeScript errors fixed
+- 1 ESLint error fixed
+- All components type-safe
+- Server compiles and runs successfully

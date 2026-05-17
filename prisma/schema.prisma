@@ -27,20 +27,23 @@ model Workspace {
   governanceRules GovernanceRule[]
   auditLogs       AuditLog[]
   buildRatings    BuildRating[]
+  artifacts       Artifact[]
+  executions      RuntimeExecution[]
+  approvalRequests ApprovalRequest[]
 }
 
 // ═══════════════════════════════════════════════════════════════
-// COMPANY GRAPH — Entity hierarchy (companies, projects, products, etc.)
+// COMPANY GRAPH — Entity hierarchy
 // ═══════════════════════════════════════════════════════════════
 
 model Company {
   id          String   @id @default(cuid())
   workspaceId String
   name        String
-  type        String   // company | project | product | service | team | member
+  type        String
   parentId    String?
-  metadata    String?  // JSON string for flexible entity attributes
-  status      String   @default("active") // active | inactive | archived
+  metadata    String?
+  status      String   @default("active")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -61,26 +64,27 @@ model RuntimeProvider {
   apiKey         String?
   baseUrl        String?
   modelId        String?
-  status         String  @default("inactive") // active | inactive | error | verifying
+  status         String  @default("inactive")
   role           String? // primary | secondary | fallback
   healthScore    Float   @default(0)
   rating         Float   @default(0)
   lastHealthCheck DateTime?
-  config         String? // JSON string for provider-specific config
+  config         String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  workspace   Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  healthLogs  RuntimeHealthLog[]
+  workspace  Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  healthLogs RuntimeHealthLog[]
+  executions RuntimeExecution[]
 }
 
 model RuntimeHealthLog {
-  id             String  @id @default(cuid())
-  providerId     String
-  status         String  // healthy | degraded | error | unknown
-  latencyMs      Int?
-  errorMessage   String?
-  createdAt      DateTime @default(now())
+  id           String   @id @default(cuid())
+  providerId   String
+  status       String
+  latencyMs    Int?
+  errorMessage String?
+  createdAt    DateTime @default(now())
 
   provider RuntimeProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
 }
@@ -94,10 +98,10 @@ model Workflow {
   workspaceId String
   name        String
   description String?
-  type        String?  // build | test | deploy | custom
-  state       String   @default("draft") // draft | validated | active | blocked | recovering | completed | archived
-  definition  String?  // JSON — workflow step definitions
-  config      String?  // JSON — workflow configuration
+  type        String?
+  state       String   @default("draft")
+  definition  String?
+  config      String?
   priority    Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -114,10 +118,10 @@ model WorkflowExecution {
   id          String    @id @default(cuid())
   workflowId  String
   agentId     String?
-  status      String    @default("pending") // pending | running | completed | failed | cancelled
+  status      String    @default("pending")
   stepName    String?
-  input       String?   // JSON
-  output      String?   // JSON
+  input       String?
+  output      String?
   error       String?
   startedAt   DateTime?
   completedAt DateTime?
@@ -135,7 +139,7 @@ model WorkflowCheckpoint {
   executionId String?
   name        String
   state       String
-  data        String?  // JSON snapshot
+  data        String?
   createdAt   DateTime @default(now())
 
   workflow Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
@@ -145,9 +149,9 @@ model WorkflowLog {
   id          String   @id @default(cuid())
   workflowId  String
   executionId String?
-  level       String   @default("info") // debug | info | warn | error
+  level       String   @default("info")
   message     String
-  metadata    String?  // JSON
+  metadata    String?
   createdAt   DateTime @default(now())
 
   workflow Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
@@ -157,7 +161,7 @@ model WorkflowDependency {
   id        String   @id @default(cuid())
   sourceId  String
   targetId  String
-  type      String   @default("after") // after | parallel | conditional
+  type      String   @default("after")
   createdAt DateTime @default(now())
 
   source Workflow @relation("WorkflowDepSource", fields: [sourceId], references: [id], onDelete: Cascade)
@@ -165,22 +169,22 @@ model WorkflowDependency {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// GOVERNANCE KERNEL — Rules, permissions, audit
+// GOVERNANCE KERNEL
 // ═══════════════════════════════════════════════════════════════
 
 model GovernanceRule {
   id          String   @id @default(cuid())
   workspaceId String
   name        String
-  type        String   // permission | approval | rate_limit | security | compliance
+  type        String
   description String?
-  config      String?  // JSON — rule configuration
+  config      String?
   enabled     Boolean  @default(true)
-  severity    String   @default("medium") // low | medium | high | critical
+  severity    String   @default("medium")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  workspace Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 }
 
 model AuditLog {
@@ -190,55 +194,56 @@ model AuditLog {
   agentId     String?
   action      String
   resource    String?
-  severity    String   @default("info") // info | warn | error | critical
-  details     String?  // JSON
+  severity    String   @default("info")
+  details     String?
   approved    Boolean?
   createdAt   DateTime @default(now())
 
-  workspace Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 }
 
 // ═══════════════════════════════════════════════════════════════
-// AGENT SYSTEM — Specialized operational agents
+// AGENT SYSTEM
 // ═══════════════════════════════════════════════════════════════
 
 model Agent {
   id           String   @id @default(cuid())
   workspaceId  String
   name         String
-  type         String   // head | builder | qa | verification | terminal | governance
+  type         String
   description  String?
-  status       String   @default("idle") // idle | active | busy | error | suspended
-  config       String?  // JSON
-  capabilities String?  // JSON array of capability strings
+  status       String   @default("idle")
+  config       String?
+  capabilities String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
   workspace  Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   executions WorkflowExecution[]
   logs       AgentLog[]
+  runtimeExecutions RuntimeExecution[]
 }
 
 model AgentLog {
   id        String   @id @default(cuid())
   agentId   String
-  level     String   @default("info") // debug | info | warn | error
+  level     String   @default("info")
   message   String
-  metadata  String?  // JSON
+  metadata  String?
   createdAt DateTime @default(now())
 
   agent Agent @relation(fields: [agentId], references: [id], onDelete: Cascade)
 }
 
 // ═══════════════════════════════════════════════════════════════
-// BUILD RATING ENGINE — Quality metrics for everything built
+// BUILD RATING ENGINE
 // ═══════════════════════════════════════════════════════════════
 
 model BuildRating {
   id                     String   @id @default(cuid())
   workspaceId            String
   targetId               String
-  targetType             String   // workflow | agent | runtime | build
+  targetType             String
   architectureQuality    Float?
   runtimeStability       Float?
   uiIntegrity            Float?
@@ -251,4 +256,118 @@ model BuildRating {
   createdAt              DateTime @default(now())
 
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 1.5 — RUNTIME EXECUTION LAYER
+// ═══════════════════════════════════════════════════════════════
+
+// Runtime Execution — actual AI calls with full audit trail
+model RuntimeExecution {
+  id              String    @id @default(cuid())
+  workspaceId     String
+  providerId      String?
+  agentId         String?
+  workflowId      String?
+  artifactId      String?
+
+  // Request data
+  requestType     String    // chat | completion | embedding
+  prompt          String
+  systemPrompt    String?
+  modelId         String?
+  temperature     Float?
+  maxTokens       Int?
+
+  // Response data
+  status          String    @default("pending") // pending | awaiting_approval | approved | rejected | executing | completed | failed | timed_out
+  response        String?
+  errorMessage    String?
+  tokenUsage      String?   // JSON { promptTokens, completionTokens, totalTokens }
+  latencyMs       Int?
+
+  // Approval
+  approvalId      String?   // links to ApprovalRequest
+  approvedAt      DateTime?
+  approvedBy      String?   // user or agent who approved
+
+  // Verification
+  verificationResult  String? // pass | fail | warning
+  verificationNotes   String?
+  hallucinationDetected Boolean @default(false)
+  verificationAgentId String?
+
+  // Metrics
+  qualityScore    Float?
+  retryCount      Int       @default(0)
+  timedOut        Boolean   @default(false)
+
+  startedAt       DateTime?
+  completedAt     DateTime?
+  createdAt       DateTime  @default(now())
+
+  workspace    Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  provider     RuntimeProvider?  @relation(fields: [providerId], references: [id], onDelete: SetNull)
+  agent        Agent?            @relation(fields: [agentId], references: [id], onDelete: SetNull)
+  artifact     Artifact?         @relation(fields: [artifactId], references: [id], onDelete: SetNull)
+  approval     ApprovalRequest?  @relation(fields: [approvalId], references: [id], onDelete: SetNull)
+}
+
+// Artifact — persistent outputs from execution
+model Artifact {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  executionId   String?  // link to runtime execution that produced this
+  workflowId    String?
+  agentId       String?
+
+  title         String
+  type          String   // code | report | plan | spec | analysis | architecture | general
+  language      String?  // for code artifacts
+  content       String   // the actual artifact content
+  summary       String?  // brief description
+  metadata      String?  // JSON
+
+  status        String   @default("draft") // draft | verified | approved | rejected | archived
+  version       Int      @default(1)
+
+  verificationResult  String? // pass | fail | warning
+  verificationNotes   String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace         Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  executions        RuntimeExecution[]
+}
+
+// Approval Request — governance gate for runtime operations
+model ApprovalRequest {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  executionId   String?  // link to runtime execution awaiting approval
+
+  requestType   String   // runtime_execution | deployment | data_export | sensitive_action
+  providerName  String?
+  providerType  String?
+
+  // What will be sent
+  promptPreview String?  // first N chars of the prompt
+  dataSize      Int?     // estimated data size
+  metadata      String?  // JSON with additional context
+
+  // Resolution
+  status        String   @default("pending") // pending | approved | rejected | expired
+  resolvedAt    DateTime?
+  resolvedBy    String?  // "user" or agent name
+
+  // Expiry
+  expiresAt     DateTime?
+
+  reason        String?  // rejection reason if rejected
+
+  createdAt     DateTime @default(now())
+
+  workspace      Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  executions     RuntimeExecution[]
 }
