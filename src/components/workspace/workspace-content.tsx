@@ -9,12 +9,14 @@ import {
   Shield,
   Bot,
   TerminalSquare,
+  Terminal,
   BarChart3,
   Zap,
   FileCode,
   Activity,
   ListOrdered,
   AlertOctagon,
+  Eye,
 } from 'lucide-react';
 import { useWorkspaceStore } from '@/lib/store/workspace-store';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -31,6 +33,8 @@ import { ArtifactPanel } from '@/components/artifacts/artifact-panel';
 import { RuntimeMetricsPanel } from '@/components/execution/runtime-metrics-panel';
 import { QueuePanel } from '@/components/execution/queue-panel';
 import { FailuresPanel } from '@/components/execution/failures-panel';
+import { DeveloperConsolePanel } from '@/components/operational/developer-console-panel';
+import { ObservabilityPanel } from '@/components/operational/observability-panel';
 
 // ─── Panel Configuration ───────────────────────────────────────
 
@@ -55,6 +59,8 @@ const PANEL_CONFIGS: PanelConfig[] = [
   { key: 'runtime-metrics', label: 'Runtime Metrics', description: 'Operational metrics and performance dashboard', icon: Activity },
   { key: 'queue', label: 'Queue', description: 'Execution queue monitoring and management', icon: ListOrdered },
   { key: 'failures', label: 'Failures', description: 'Failure classification and pattern analysis', icon: AlertOctagon },
+  { key: 'developer-console', label: 'Developer Console', description: 'Event stream, traces, and operational debugging', icon: Terminal },
+  { key: 'observability', label: 'Observability', description: 'System health, graph diagnostics, and coordination view', icon: Eye },
 ];
 
 const CONFIG_MAP = new Map(PANEL_CONFIGS.map((p) => [p.key, p]));
@@ -181,6 +187,16 @@ export function WorkspaceContent() {
   // Real implementation for failures
   if (activePanel === 'failures') {
     return <FailuresPanel />;
+  }
+
+  // Real implementation for developer-console
+  if (activePanel === 'developer-console') {
+    return <DeveloperConsolePanel />;
+  }
+
+  // Real implementation for observability
+  if (activePanel === 'observability') {
+    return <ObservabilityPanel />;
   }
 
   // Placeholder for all other panels

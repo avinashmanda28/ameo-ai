@@ -389,3 +389,232 @@ export const ARTIFACT_TYPE_COLORS: Record<ArtifactType, string> = {
   architecture: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
   general: 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400',
 };
+
+// ─── Phase 1.7: Operational Cohesion Layer ───
+
+// Event Bus
+export type EventLevel = 'debug' | 'info' | 'warn' | 'error' | 'critical';
+export type EventSource = 'workflow' | 'runtime' | 'queue' | 'governance' | 'agent' | 'artifact' | 'system';
+
+export interface SystemEvent {
+  id: string;
+  workspaceId: string;
+  eventType: string;
+  source: EventSource | null;
+  level: EventLevel;
+  correlationId: string | null;
+  causationId: string | null;
+  traceId: string | null;
+  payload: string | null;
+  resourceType: string | null;
+  resourceId: string | null;
+  actorId: string | null;
+  actorType: string | null;
+  tags: string | null;
+  version: number;
+  createdAt: string;
+}
+
+export const EVENT_LEVEL_COLORS: Record<EventLevel, string> = {
+  debug: 'text-slate-500',
+  info: 'text-sky-500',
+  warn: 'text-amber-500',
+  error: 'text-red-500',
+  critical: 'text-red-400 font-bold',
+};
+
+// Execution Trace
+export type TraceOperation = 'execute' | 'verify' | 'approve' | 'queue' | 'retry' | 'recover' | 'checkpoint' | 'coordinate' | 'snapshot';
+export type TraceStatus = 'pending' | 'running' | 'completed' | 'failed' | 'skipped';
+
+export interface ExecutionTrace {
+  id: string;
+  workspaceId: string;
+  traceId: string;
+  parentId: string | null;
+  rootId: string | null;
+  operation: TraceOperation;
+  subsystem: string;
+  status: TraceStatus;
+  stepOrder: number;
+  workflowId: string | null;
+  executionId: string | null;
+  queueId: string | null;
+  agentId: string | null;
+  artifactId: string | null;
+  eventId: string | null;
+  inputSnapshot: string | null;
+  outputSnapshot: string | null;
+  errorSnapshot: string | null;
+  metadata: string | null;
+  durationMs: number | null;
+  startedAt: string;
+  completedAt: string | null;
+}
+
+export const TRACE_OPERATION_LABELS: Record<TraceOperation, string> = {
+  execute: 'Execute',
+  verify: 'Verify',
+  approve: 'Approve',
+  queue: 'Queue',
+  retry: 'Retry',
+  recover: 'Recover',
+  checkpoint: 'Checkpoint',
+  coordinate: 'Coordinate',
+  snapshot: 'Snapshot',
+};
+
+export const TRACE_STATUS_COLORS: Record<TraceStatus, string> = {
+  pending: 'text-slate-500',
+  running: 'text-sky-500',
+  completed: 'text-emerald-500',
+  failed: 'text-red-500',
+  skipped: 'text-gray-400',
+};
+
+// Agent Coordination
+export type CoordinationTaskType = 'build' | 'verify' | 'govern' | 'execute' | 'observe' | 'coordinate';
+export type CoordinationStatus = 'claimed' | 'active' | 'handed_off' | 'completed' | 'failed' | 'expired';
+
+export interface AgentCoordination {
+  id: string;
+  workspaceId: string;
+  taskId: string;
+  taskType: CoordinationTaskType;
+  description: string | null;
+  ownerAgentId: string;
+  ownerAgentType: string | null;
+  authorityScope: string | null;
+  permissionSet: string | null;
+  status: CoordinationStatus;
+  priority: number;
+  handedOffTo: string | null;
+  handedOffAt: string | null;
+  handoffReason: string | null;
+  lockedAt: string | null;
+  lockExpiresAt: string | null;
+  isLocked: boolean;
+  conflictCheckIds: string | null;
+  traceId: string | null;
+  correlationId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  completedAt: string | null;
+}
+
+export const COORDINATION_STATUS_COLORS: Record<CoordinationStatus, string> = {
+  claimed: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
+  active: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  handed_off: 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
+  completed: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+  failed: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+  expired: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+};
+
+// State Snapshot
+export type ConsistencyStatus = 'consistent' | 'drifted' | 'unknown';
+
+export interface StateSnapshot {
+  id: string;
+  workspaceId: string;
+  subsystem: string;
+  resourceType: string | null;
+  resourceId: string | null;
+  stateHash: string | null;
+  stateData: string | null;
+  previousHash: string | null;
+  consistencyStatus: ConsistencyStatus;
+  driftDetected: boolean;
+  driftDetails: string | null;
+  capturedBy: string | null;
+  snapshotReason: string | null;
+  createdAt: string;
+}
+
+// System Health Metric
+export type HealthSeverity = 'normal' | 'warning' | 'degraded' | 'critical';
+
+export interface SystemHealthMetric {
+  id: string;
+  workspaceId: string;
+  subsystem: string;
+  metricType: string;
+  value: number;
+  unit: string | null;
+  severity: HealthSeverity;
+  threshold: number | null;
+  metadata: string | null;
+  sourceEventId: string | null;
+  createdAt: string;
+}
+
+export const HEALTH_SEVERITY_COLORS: Record<HealthSeverity, string> = {
+  normal: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  warning: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  degraded: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+  critical: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+};
+
+export const HEALTH_SEVERITY_DOT_COLORS: Record<HealthSeverity, string> = {
+  normal: 'bg-emerald-500',
+  warning: 'bg-amber-500',
+  degraded: 'bg-orange-500',
+  critical: 'bg-red-500 animate-pulse',
+};
+
+// Workflow Graph Intelligence
+export type GraphIssueType = 'circular_dependency' | 'deadlock' | 'orphan' | 'missing_dependency' | 'self_reference';
+
+export interface GraphAnalysisResult {
+  isValid: boolean;
+  issues: GraphIssue[];
+  nodeCount: number;
+  edgeCount: number;
+  executionPlan: string[][];
+  integrityScore: number;
+}
+
+export interface GraphIssue {
+  type: GraphIssueType;
+  severity: 'warning' | 'error';
+  description: string;
+  affectedNodes: string[];
+}
+
+// Sandbox
+export type SandboxPermission = 'read' | 'write' | 'execute' | 'network' | 'file_system';
+
+export interface SandboxProfile {
+  id: string;
+  name: string;
+  description: string;
+  permissions: SandboxPermission[];
+  restrictedPaths: string[];
+  maxExecutionTimeMs: number;
+  maxMemoryMb: number;
+}
+
+export const DEFAULT_SANDBOX_PROFILE: SandboxProfile = {
+  id: 'restricted',
+  name: 'Restricted',
+  description: 'Default restricted sandbox for untrusted executions',
+  permissions: ['read'],
+  restrictedPaths: ['*'],
+  maxExecutionTimeMs: 30000,
+  maxMemoryMb: 256,
+};
+
+// System Health Dashboard Aggregation
+export interface SystemHealthSummary {
+  overallScore: number;
+  subsystems: {
+    queue: { score: number; severity: HealthSeverity; details: string };
+    runtime: { score: number; severity: HealthSeverity; details: string };
+    workflow: { score: number; severity: HealthSeverity; details: string };
+    verification: { score: number; severity: HealthSeverity; details: string };
+    recovery: { score: number; severity: HealthSeverity; details: string };
+    agent: { score: number; severity: HealthSeverity; details: string };
+    eventBus: { score: number; severity: HealthSeverity; details: string };
+  };
+  lastUpdatedAt: string;
+}

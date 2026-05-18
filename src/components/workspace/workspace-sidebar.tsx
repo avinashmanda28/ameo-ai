@@ -10,6 +10,7 @@ import {
   Shield,
   Bot,
   TerminalSquare,
+  Terminal,
   BarChart3,
   Hammer,
   Activity,
@@ -18,6 +19,7 @@ import {
   FileCode,
   ListOrdered,
   AlertOctagon,
+  Eye,
 } from 'lucide-react';
 import { useWorkspaceStore } from '@/lib/store/workspace-store';
 import { WORKSPACE_MODES, type WorkspaceMode } from '@/lib/types';
@@ -56,6 +58,8 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'execution', label: 'Execution', icon: Zap, group: 'SYSTEMS' },
   { key: 'queue', label: 'Queue', icon: ListOrdered, group: 'SYSTEMS' },
   { key: 'artifacts', label: 'Artifacts', icon: FileCode, group: 'SYSTEMS' },
+  { key: 'developer-console', label: 'Developer Console', icon: Terminal, group: 'OPERATIONS' },
+  { key: 'observability', label: 'Observability', icon: Eye, group: 'OPERATIONS' },
   { key: 'agents', label: 'Agents', icon: Bot, group: 'INTELLIGENCE' },
   { key: 'terminal', label: 'Terminal', icon: TerminalSquare, group: 'INTELLIGENCE' },
   { key: 'reports', label: 'Reports', icon: BarChart3, group: 'INTELLIGENCE' },
@@ -63,7 +67,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'failures', label: 'Failures', icon: AlertOctagon, group: 'INTELLIGENCE' },
 ];
 
-const NAV_GROUPS = ['OVERVIEW', 'SYSTEMS', 'INTELLIGENCE'] as const;
+const NAV_GROUPS = ['OVERVIEW', 'SYSTEMS', 'OPERATIONS', 'INTELLIGENCE'] as const;
 
 const MODE_ICONS: Record<WorkspaceMode, React.ComponentType<{ className?: string }>> = {
   builder: Hammer,

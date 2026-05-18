@@ -455,3 +455,167 @@ model FailureRecord {
 
   createdAt       DateTime @default(now())
 }
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 1.7 — OPERATIONAL COHESION LAYER
+// ═══════════════════════════════════════════════════════════════
+
+// SystemEvent — centralized event bus entries (the nervous system)
+model SystemEvent {
+  id              String   @id @default(cuid())
+  workspaceId     String
+
+  // Event identity
+  eventType       String   // workflow.started | runtime.executed | queue.retrying | etc.
+  source          String?  // subsystem that emitted: workflow | runtime | queue | governance | agent | system
+  level           String   @default("info") // debug | info | warn | error | critical
+
+  // Correlation & lineage
+  correlationId   String?  // links related events across systems
+  causationId     String?  // the event that caused this event (parent)
+  traceId         String?  // overall trace spanning multiple operations
+
+  // Payload
+  payload         String?  // JSON — structured event data
+  resourceType    String?  // workflow | execution | queue_item | artifact | agent | approval
+  resourceId      String?  // ID of the affected resource
+  actorId         String?  // agent or user that triggered
+  actorType       String?  // agent | user | system
+
+  // Metadata
+  tags            String?  // JSON array of string tags for filtering
+  version         Int      @default(1)
+
+  createdAt       DateTime @default(now())
+}
+
+// ExecutionTrace — full operational lineage tracking
+model ExecutionTrace {
+  id              String   @id @default(cuid())
+  workspaceId     String
+  traceId         String   // groups all traces for one logical operation
+
+  // Hierarchy
+  parentId        String?
+  rootId          String?
+
+  // What happened
+  operation       String   // execute | verify | approve | queue | retry | recover | checkpoint
+  subsystem       String   // runtime | workflow | queue | governance | agent | artifact | system
+  status          String   @default("pending") // pending | running | completed | failed | skipped
+  stepOrder       Int      @default(0)
+
+  // Links
+  workflowId      String?
+  executionId     String?
+  queueId         String?
+  agentId         String?
+  artifactId      String?
+  eventId         String?  // links to SystemEvent
+
+  // Data
+  inputSnapshot   String?  // JSON — input data at this trace point
+  outputSnapshot  String?  // JSON — output data at this trace point
+  errorSnapshot   String?  // JSON — error data if failed
+  metadata        String?  // JSON — additional context
+
+  // Metrics
+  durationMs      Int?
+  startedAt       DateTime @default(now())
+  completedAt     DateTime?
+}
+
+// AgentCoordination — formal agent task management & conflict prevention
+model AgentCoordination {
+  id              String   @id @default(cuid())
+  workspaceId     String
+
+  // Task identity
+  taskId          String   @unique
+  taskType        String   // build | verify | govern | execute | observe | coordinate
+  description     String?
+
+  // Ownership
+  ownerAgentId    String   @unique // which agent owns this task
+  ownerAgentType  String?  // head | builder | qa | verification | terminal | governance
+
+  // Authority & boundaries
+  authorityScope  String?  // JSON — defines what the agent can modify
+  permissionSet   String?  // JSON — list of permitted actions
+
+  // Lifecycle
+  status          String   @default("claimed") // claimed | active | handed_off | completed | failed | expired
+  priority        Int      @default(0)
+
+  // Handoff
+  handedOffTo     String?  // agent ID
+  handedOffAt     DateTime?
+  handoffReason   String?
+
+  // Locking
+  lockedAt        DateTime?
+  lockExpiresAt   DateTime?
+  isLocked        Boolean  @default(false)
+
+  // Conflict prevention
+  conflictCheckIds String? // JSON array of task IDs checked for conflicts
+
+  // Traceability
+  traceId         String?
+  correlationId   String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  completedAt     DateTime?
+}
+
+// StateSnapshot — periodic state consistency captures
+model StateSnapshot {
+  id              String   @id @default(cuid())
+  workspaceId     String
+
+  // What was captured
+  subsystem       String   // workflow | queue | runtime | agent | artifact | governance | system
+  resourceType    String?  // specific resource type
+  resourceId      String?  // specific resource ID
+
+  // State data
+  stateHash       String?  // SHA-256 hash of state for integrity comparison
+  stateData       String?  // JSON — full state snapshot
+  previousHash    String?  // hash of the previous snapshot for drift detection
+
+  // Consistency check
+  consistencyStatus String @default("consistent") // consistent | drifted | unknown
+  driftDetected   Boolean  @default(false)
+  driftDetails    String?  // JSON — what changed
+
+  // Metadata
+  capturedBy      String?  // system | consistency_engine
+  snapshotReason  String?  // periodic | pre_execution | post_execution | recovery | manual
+
+  createdAt       DateTime @default(now())
+}
+
+// SystemHealthMetric — operational health monitoring
+model SystemHealthMetric {
+  id              String   @id @default(cuid())
+  workspaceId     String
+
+  // What's being measured
+  subsystem       String   // queue | runtime | workflow | verification | recovery | agent | event_bus | system
+  metricType      String   // pressure | latency | failure_rate | throughput | congestion | health_score
+
+  // Value
+  value           Float
+  unit            String?  // ms | count | percent | score | events/sec
+
+  // Classification
+  severity        String   @default("normal") // normal | warning | degraded | critical
+  threshold       Float?   // the threshold that triggers warning/degraded
+
+  // Context
+  metadata        String?  // JSON — additional context
+  sourceEventId   String?  // links to SystemEvent that triggered this
+
+  createdAt       DateTime @default(now())
+}
