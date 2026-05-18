@@ -128,7 +128,7 @@ export function ApprovalBanner() {
           }
         }
       } catch (err) {
-        console.warn('[Nexus OS] Failed to fetch approvals:', err);
+        console.warn('[Ameo AI] Failed to fetch approvals:', err);
       }
     }
 
@@ -157,7 +157,7 @@ export function ApprovalBanner() {
         removeApproval(id);
       }
     } catch (err) {
-      console.warn('[Nexus OS] Failed to approve:', err);
+      console.warn('[Ameo AI] Failed to approve:', err);
     } finally {
       setResolvingId(null);
     }
@@ -175,7 +175,7 @@ export function ApprovalBanner() {
         removeApproval(id);
       }
     } catch (err) {
-      console.warn('[Nexus OS] Failed to reject:', err);
+      console.warn('[Ameo AI] Failed to reject:', err);
     } finally {
       setResolvingId(null);
       setRejectDialogOpen(false);

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-// NEXUS OS — Runtime Execution Engine Types
+// AMEO AI — Runtime Execution Engine Types
 // Core type definitions for the runtime AI execution layer
 // ═══════════════════════════════════════════════════════════════
 

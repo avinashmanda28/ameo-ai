@@ -66,7 +66,7 @@ function EditableWorkspaceName() {
   const [draft, setDraft] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const name = workspace?.name ?? 'Nexus OS';
+  const name = workspace?.name ?? 'Ameo AI';
 
   const startEdit = useCallback(() => {
     setDraft(name);

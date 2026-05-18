@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════
-// NEXUS OS — Master Type Definitions
-// AI-Native Operational Operating System
+// AMEO AI — Master Type Definitions
+// Governed AI-Native Operational Platform
 // ═══════════════════════════════════════════════════════════════
 
 // ─── Workspace ───

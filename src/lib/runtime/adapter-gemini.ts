@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-// NEXUS OS — Gemini Provider Adapter
+// AMEO AI — Gemini Provider Adapter
 // Real HTTP adapter for the Google Gemini API
 // ═══════════════════════════════════════════════════════════════
 

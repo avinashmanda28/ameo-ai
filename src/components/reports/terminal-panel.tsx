@@ -180,7 +180,7 @@ export function TerminalPanel() {
         timestamp: new Date(now - 4000),
         level: 'info',
         source: 'system',
-        message: 'NEXUS OS — Terminal Observer v1.0 initialized',
+        message: 'AMEO AI — Terminal Observer v2.0 initialized',
       },
       {
         id: generateId(),
@@ -416,7 +416,7 @@ export function TerminalPanel() {
               <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
             </div>
-            <span className="text-[11px] text-zinc-500 font-mono ml-2">nexus://terminal-observer</span>
+            <span className="text-[11px] text-zinc-500 font-mono ml-2">ameo://terminal-observer</span>
             <div className="flex-1" />
             <span className="text-[10px] text-zinc-600 font-mono tabular-nums">
               {filteredLogs.length} entries

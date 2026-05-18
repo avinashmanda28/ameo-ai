@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-// NEXUS OS — OpenRouter Provider Adapter
+// AMEO AI — OpenRouter Provider Adapter
 // Real HTTP adapter for the OpenRouter API (OpenAI-compatible)
 // ═══════════════════════════════════════════════════════════════
 
@@ -47,8 +47,8 @@ export class OpenRouterAdapter implements ProviderAdapter {
         headers: {
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://nexus-os.local',
-          'X-Title': 'Nexus OS',
+          'HTTP-Referer': 'https://ameo.ai',
+          'X-Title': 'Ameo AI',
         },
         body: JSON.stringify(body),
         signal,

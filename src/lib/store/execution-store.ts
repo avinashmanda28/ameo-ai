@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import type { ExecutionRunStatus, ArtifactType, ArtifactStatus, ApprovalStatus, ApprovalRequestType } from '@/lib/types';
 
 // ═══════════════════════════════════════════════════════════════
-// NEXUS OS — Execution State Store (Phase 1.5)
+// AMEO AI — Execution State Store
 // ═══════════════════════════════════════════════════════════════
 
 // ─── Inline types not in master types ───

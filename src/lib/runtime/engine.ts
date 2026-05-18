@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════════
-// NEXUS OS — Runtime Execution Engine
+// AMEO AI — Runtime Execution Engine
 // The central orchestrator that routes, executes, governs, and
-// audits all AI provider calls across the Nexus OS platform.
+// audits all AI provider calls across the Ameo AI platform.
 // ═══════════════════════════════════════════════════════════════
 
 import { PrismaClient } from '@prisma/client';

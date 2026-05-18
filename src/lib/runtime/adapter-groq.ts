@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-// NEXUS OS — Groq Provider Adapter
+// AMEO AI — Groq Provider Adapter
 // Real HTTP adapter for the Groq API (OpenAI-compatible)
 // ═══════════════════════════════════════════════════════════════
 

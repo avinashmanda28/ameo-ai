@@ -13,6 +13,8 @@ import {
   Zap,
   FileCode,
   Activity,
+  ListOrdered,
+  AlertOctagon,
 } from 'lucide-react';
 import { useWorkspaceStore } from '@/lib/store/workspace-store';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -27,6 +29,8 @@ import { TerminalPanel } from '@/components/reports/terminal-panel';
 import { ExecutionPanel } from '@/components/execution/execution-panel';
 import { ArtifactPanel } from '@/components/artifacts/artifact-panel';
 import { RuntimeMetricsPanel } from '@/components/execution/runtime-metrics-panel';
+import { QueuePanel } from '@/components/execution/queue-panel';
+import { FailuresPanel } from '@/components/execution/failures-panel';
 
 // ─── Panel Configuration ───────────────────────────────────────
 
@@ -49,6 +53,8 @@ const PANEL_CONFIGS: PanelConfig[] = [
   { key: 'execution', label: 'Execution', description: 'Runtime prompt execution and response viewer', icon: Zap },
   { key: 'artifacts', label: 'Artifacts', description: 'Claude-style artifact viewer and manager', icon: FileCode },
   { key: 'runtime-metrics', label: 'Runtime Metrics', description: 'Operational metrics and performance dashboard', icon: Activity },
+  { key: 'queue', label: 'Queue', description: 'Execution queue monitoring and management', icon: ListOrdered },
+  { key: 'failures', label: 'Failures', description: 'Failure classification and pattern analysis', icon: AlertOctagon },
 ];
 
 const CONFIG_MAP = new Map(PANEL_CONFIGS.map((p) => [p.key, p]));
@@ -165,6 +171,16 @@ export function WorkspaceContent() {
   // Real implementation for runtime-metrics
   if (activePanel === 'runtime-metrics') {
     return <RuntimeMetricsPanel />;
+  }
+
+  // Real implementation for queue
+  if (activePanel === 'queue') {
+    return <QueuePanel />;
+  }
+
+  // Real implementation for failures
+  if (activePanel === 'failures') {
+    return <FailuresPanel />;
   }
 
   // Placeholder for all other panels

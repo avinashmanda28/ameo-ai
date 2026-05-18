@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-// NEXUS OS — Runtime Router
+// AMEO AI — Runtime Router
 // Intelligent provider selection based on role, health, and governance
 // ═══════════════════════════════════════════════════════════════
 

@@ -280,7 +280,7 @@ model RuntimeExecution {
   maxTokens       Int?
 
   // Response data
-  status          String    @default("pending") // pending | awaiting_approval | approved | rejected | executing | completed | failed | timed_out
+  status          String    @default("pending") // pending | queued | awaiting_approval | approved | rejected | executing | completed | failed | timed_out
   response        String?
   errorMessage    String?
   tokenUsage      String?   // JSON { promptTokens, completionTokens, totalTokens }
@@ -300,7 +300,11 @@ model RuntimeExecution {
   // Metrics
   qualityScore    Float?
   retryCount      Int       @default(0)
+  maxRetries      Int       @default(3)
   timedOut        Boolean   @default(false)
+
+  // Queue link
+  queueId         String?
 
   startedAt       DateTime?
   completedAt     DateTime?
@@ -370,4 +374,84 @@ model ApprovalRequest {
 
   workspace      Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   executions     RuntimeExecution[]
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 1.6 — EXECUTION QUEUE & RECOVERY
+// ═══════════════════════════════════════════════════════════════
+
+// Execution Queue — manages concurrent execution with prioritization
+model ExecutionQueue {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  executionId   String?  // link to RuntimeExecution
+
+  // Queue metadata
+  status        String   @default("pending") // pending | running | retrying | failed | completed | cancelled
+  priority      Int      @default(0) // higher = more urgent
+
+  // Execution config (snapshot)
+  providerId    String?
+  agentId       String?
+  workflowId    String?
+  requestType   String?
+  prompt        String?
+  systemPrompt  String?
+  modelId       String?
+  temperature   Float?
+  maxTokens     Int?
+
+  // Scheduling
+  scheduledAt   DateTime @default(now())
+  startedAt     DateTime?
+  completedAt   DateTime?
+
+  // Retry logic
+  retryCount    Int      @default(0)
+  maxRetries    Int      @default(3)
+  retryDelayMs  Int      @default(1000) // exponential backoff multiplier
+  nextRetryAt   DateTime?
+  lastError     String?
+
+  // Failure classification
+  failureType   String?  // timeout | auth_failed | rate_limited | provider_unavailable | connection_refused | unknown
+  failureSeverity String? // low | medium | high | critical
+
+  // Result
+  result        String?  // execution response or error
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// Failure Record — classified runtime failures for pattern analysis
+model FailureRecord {
+  id              String   @id @default(cuid())
+  workspaceId     String
+  executionId     String?
+  queueId         String?
+  providerId      String?
+  workflowId      String?
+
+  // Classification
+  failureType     String   // timeout | auth_failed | rate_limited | provider_unavailable | connection_refused | validation_failed | unknown
+  failureSeverity String   @default("medium") // low | medium | high | critical
+  category        String   // runtime | workflow | governance | network | system
+
+  // Details
+  errorMessage    String
+  errorStack      String?
+  providerType    String?
+  modelId         String?
+
+  // Recovery
+  recoveryAction  String?  // retry | fallback | abort | manual_intervention
+  recoveryResult  String?  // success | failed | pending
+  recoveredAt     DateTime?
+
+  // Pattern tracking
+  isRecurring     Boolean  @default(false)
+  occurrenceCount Int      @default(1)
+
+  createdAt       DateTime @default(now())
 }

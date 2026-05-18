@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-// NEXUS OS — Ollama Provider Adapter
+// AMEO AI — Ollama Provider Adapter
 // Real HTTP adapter for local Ollama models
 // ═══════════════════════════════════════════════════════════════
 

@@ -27,17 +27,17 @@ async function safeFetch<T>(url: string, label: string): Promise<T | null> {
   try {
     const res = await fetch(url);
     if (!res.ok) {
-      console.warn(`[Nexus OS] Failed to fetch ${label}: ${res.status}`);
+      console.warn(`[Ameo AI] Failed to fetch ${label}: ${res.status}`);
       return null;
     }
     const json: ApiResponse<T> = await res.json();
     if (!json.success) {
-      console.warn(`[Nexus OS] ${label} returned error: ${json.error}`);
+      console.warn(`[Ameo AI] ${label} returned error: ${json.error}`);
       return null;
     }
     return json.data ?? null;
   } catch (err) {
-    console.warn(`[Nexus OS] Error fetching ${label}:`, err);
+    console.warn(`[Ameo AI] Error fetching ${label}:`, err);
     return null;
   }
 }

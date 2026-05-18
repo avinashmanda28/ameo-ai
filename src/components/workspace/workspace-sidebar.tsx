@@ -16,6 +16,8 @@ import {
   Compass,
   Zap,
   FileCode,
+  ListOrdered,
+  AlertOctagon,
 } from 'lucide-react';
 import { useWorkspaceStore } from '@/lib/store/workspace-store';
 import { WORKSPACE_MODES, type WorkspaceMode } from '@/lib/types';
@@ -52,11 +54,13 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'workflows', label: 'Workflows', icon: Workflow, group: 'SYSTEMS' },
   { key: 'governance', label: 'Governance', icon: Shield, group: 'SYSTEMS' },
   { key: 'execution', label: 'Execution', icon: Zap, group: 'SYSTEMS' },
+  { key: 'queue', label: 'Queue', icon: ListOrdered, group: 'SYSTEMS' },
   { key: 'artifacts', label: 'Artifacts', icon: FileCode, group: 'SYSTEMS' },
   { key: 'agents', label: 'Agents', icon: Bot, group: 'INTELLIGENCE' },
   { key: 'terminal', label: 'Terminal', icon: TerminalSquare, group: 'INTELLIGENCE' },
   { key: 'reports', label: 'Reports', icon: BarChart3, group: 'INTELLIGENCE' },
   { key: 'runtime-metrics', label: 'Runtime Metrics', icon: Activity, group: 'INTELLIGENCE' },
+  { key: 'failures', label: 'Failures', icon: AlertOctagon, group: 'INTELLIGENCE' },
 ];
 
 const NAV_GROUPS = ['OVERVIEW', 'SYSTEMS', 'INTELLIGENCE'] as const;
@@ -90,10 +94,10 @@ export function WorkspaceSidebar() {
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
             <span className="text-sm font-semibold tracking-tight text-zinc-100">
-              Nexus OS
+              Ameo AI
             </span>
             <span className="text-[10px] font-medium text-zinc-500 tracking-wider uppercase">
-              AI-Native OS
+              Governed AI Platform
             </span>
           </div>
         </div>

@@ -433,7 +433,7 @@ export function ArtifactPanel() {
           }
         }
       } catch (err) {
-        console.warn('[Nexus OS] Failed to fetch artifacts:', err);
+        console.warn('[Ameo AI] Failed to fetch artifacts:', err);
       }
     }
     fetchArtifacts();
@@ -457,7 +457,7 @@ export function ArtifactPanel() {
           }
         }
       } catch (err) {
-        console.warn('[Nexus OS] Failed to save artifact:', err);
+        console.warn('[Ameo AI] Failed to save artifact:', err);
       } finally {
         setSaving(false);
       }
@@ -472,7 +472,7 @@ export function ArtifactPanel() {
       await fetch(`/api/artifacts/${selectedArtifactId}`, { method: 'DELETE' });
       setSelectedArtifactId(null);
     } catch (err) {
-      console.warn('[Nexus OS] Failed to delete artifact:', err);
+      console.warn('[Ameo AI] Failed to delete artifact:', err);
     }
   }, [selectedArtifactId, setSelectedArtifactId]);
 
@@ -490,7 +490,7 @@ export function ArtifactPanel() {
         }
       }
     } catch (err) {
-      console.warn('[Nexus OS] Failed to verify artifact:', err);
+      console.warn('[Ameo AI] Failed to verify artifact:', err);
     }
   }, [selectedArtifactId, updateArtifact]);
 

@@ -13,7 +13,7 @@ import type {
 } from '@/lib/types';
 
 // ═══════════════════════════════════════════════════════════════
-// NEXUS OS — Central State Store
+// AMEO AI — Central State Store
 // ═══════════════════════════════════════════════════════════════
 
 interface WorkspaceStore {

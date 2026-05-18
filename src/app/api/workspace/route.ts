@@ -9,7 +9,7 @@ export async function GET() {
     if (!workspace) {
       workspace = await db.workspace.create({
         data: {
-          name: 'Nexus OS Workspace',
+          name: 'Ameo AI Workspace',
           mode: 'builder',
           status: 'active',
         },

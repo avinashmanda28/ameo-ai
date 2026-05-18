@@ -1,4 +1,4 @@
-# Nexus OS — Build Worklog
+# Ameo AI — Build Worklog
 
 ---
 Task ID: 0
@@ -126,3 +126,132 @@ Stage Summary:
 - 1 ESLint error fixed
 - All components type-safe
 - Server compiles and runs successfully
+
+---
+Task ID: 5
+Agent: API Builder Agent
+Task: Execution Queue System & Workflow Recovery API Routes
+
+Work Log:
+- Created GET/POST /api/queue (list with status counts + create with validation)
+- Created GET/PATCH/DELETE /api/queue/[id] (single item management, soft-cancel)
+- Created POST /api/queue/process (claim next pending/retrying item by priority)
+- Created POST /api/queue/retry (exponential backoff retry for failed items)
+- Created GET/POST /api/failures (list with aggregations + create with recurring detection)
+- Created POST /api/workflows/[id]/recover (workflow recovery from latest checkpoint)
+- All 6 routes pass ESLint with 0 errors
+- Dev server compiles and runs successfully
+
+Stage Summary:
+- 6 new API routes (27 total across all phases)
+- Execution queue CRUD with priority-based sorting and status count aggregation
+- Queue processing: claims highest-priority due item, marks as running
+- Retry with exponential backoff: delay = baseDelay * 2^retryCount, max retry guard
+- Failure recording with recurring failure detection (same type + provider within 1 hour)
+- Workflow recovery: finds latest checkpoint, creates new execution, logs recovery action
+- Consistent ApiResponse<T> pattern across all routes
+
+---
+Task ID: 7-9
+Agent: Runtime Stability Builder
+Task: Enhanced Runtime Stability Systems
+
+Work Log:
+- Created src/lib/runtime/queue-manager.ts (ExecutionQueueManager class)
+  - enqueue(): Creates ExecutionQueue DB record with priority, config snapshot, retry settings
+  - processNext(): Selects highest-priority pending/retrying item, respects maxConcurrency limit (default 3)
+  - complete(): Marks item completed with result and timestamp
+  - fail(): Marks failed, applies exponential backoff (retryDelayMs * 2^retryCount), schedules retry if retries remain
+  - getQueueStats(): Returns counts by status (pending/running/retrying/failed/completed/cancelled)
+  - cancel(): Cancels pending or retrying items only
+  - retry(): Manually retries a failed item with backoff
+  - getItems(): Fetches queue items with filtering and pagination
+  - purgeCompleted(): Removes old completed/cancelled items
+  - Singleton: getQueueManager()
+
+- Created src/lib/runtime/verifier.ts (RuntimeVerifier class)
+  - 6-dimensional response verification engine
+  - Check 1 — Output consistency: empty=0, <20 chars=30, <50=65, <200=80, 200+=95
+  - Check 2 — Refusal detection: 15+ refusal patterns, multi-pattern=20, short+refusal=30, long+refusal=60
+  - Check 3 — Repetition detection: sentence dedup, 0%=100, <20%=85, 20-40%=60, ≥40%=25
+  - Check 4 — Structure validation: paragraphs, sentences, code blocks, lists
+  - Check 5 — Hallucination scoring: empty=0, <20 chars=40, refusal=50, repetition=55, normal=85, substantial=95
+  - Check 6 — API response validation: JSON error object detection, status code patterns
+  - shouldBlock(): score < 30 or critical failures
+  - shouldFlag(): score < 60
+  - Weighted average scoring across all dimensions
+  - Singleton: getVerifier()
+
+- Created src/lib/runtime/failure-classifier.ts (FailureClassifier class)
+  - Multi-layer error classification: HTTP status → AbortError → regex patterns → structured objects → fallback
+  - 7 failure types: timeout, auth_failed, rate_limited, provider_unavailable, connection_refused, validation_failed, unknown
+  - 4 severity levels: low, medium, high, critical
+  - 5 categories: runtime, workflow, governance, network, system
+  - 4 recovery actions: retry, fallback, abort, manual_intervention
+  - recordFailure(): Persists to FailureRecord, detects recurring patterns (≥3 same-type in 1hr), auto-escalates severity
+  - getFailureHistory(): Query failures with filtering by workspace, type, date
+  - getFailureSummary(): Aggregate stats by type, severity, category
+  - Singleton: getFailureClassifier()
+
+Stage Summary:
+- 3 new runtime modules (10 total in src/lib/runtime/)
+- Queue manager with real Prisma persistence and concurrency control
+- Verification engine with 6 independent check dimensions and weighted scoring
+- Failure classifier with pattern-based classification, DB recording, and recurring detection
+- All 0 ESLint errors, dev server compiles successfully
+
+---
+Task ID: 10
+Agent: UI Builder Agent
+Task: Execution Queue, Recovery Indicators, and Enhanced Verification UI Panels
+
+Work Log:
+- Created src/components/execution/queue-panel.tsx (Execution Queue Monitoring Panel)
+  - Fetches queue items from GET /api/queue with auto-refresh every 5 seconds
+  - 6 stat cards: pending, running, completed, failed, retrying, total
+  - Active queue list with status badges (color-coded), priority indicators, retry count, failure type
+  - Completed/cancelled items in separate section
+  - "Process Next" button → POST /api/queue/process
+  - "Retry" button on failed/retrying items → POST /api/queue/retry
+  - "Cancel" button on pending items → DELETE /api/queue
+  - Empty state when queue is empty
+  - Uses Card, Badge, Button, ScrollArea, Skeleton from shadcn/ui
+  - Uses motion from framer-motion with containerVariants/itemVariants pattern
+  - Dark theme: bg-zinc-950, text-zinc-300, border-zinc-800
+
+- Created src/components/execution/failures-panel.tsx (Failure Classification & Pattern Analysis Panel)
+  - Fetches failure records from GET /api/failures with auto-refresh every 10 seconds
+  - Stats summary: total failures, critical count, recurring count, recovered count
+  - Failure distribution bar chart with severity-based coloring (animated bars)
+  - Multi-dimensional filters: severity, category, type (with "Clear All" button)
+  - "Recurring Failures" section highlighting failures with occurrenceCount > 1
+  - Detailed failure records: type, severity, category, message, recovery action, recurrence badge
+  - Recovery status indicators (success/pending/failed/none) with icons
+  - Empty state when no failures recorded
+
+- Created src/components/workflows/recovery-panel.tsx (Workflow Recovery Panel)
+  - Standalone component for integration into workflow engine panel
+  - Fetches recoverable workflows from GET /api/workflows/recovery
+  - Lists workflows in 'blocked' or 'recovering' state with visual differentiation
+  - Available checkpoints for each workflow with "Recover from Checkpoint" button
+  - Recovery audit logs per workflow (success/pending/failed icons)
+  - Blocked/recovering count badges in header
+  - Collapsible workflow cards with smooth animation
+  - Empty state when all workflows are healthy
+
+- Updated src/components/workspace/workspace-content.tsx
+  - Added imports: ListOrdered, AlertOctagon, QueuePanel, FailuresPanel
+  - Added PANEL_CONFIGS entries: 'queue' (ListOrdered) and 'failures' (AlertOctagon)
+  - Added route handlers for 'queue' → QueuePanel and 'failures' → FailuresPanel
+
+- Updated src/components/workspace/workspace-sidebar.tsx
+  - Added imports: ListOrdered, AlertOctagon
+  - Added NAV_ITEMS: 'queue' (ListOrdered, SYSTEMS group) and 'failures' (AlertOctagon, INTELLIGENCE group)
+
+Stage Summary:
+- 3 new UI components + 2 existing component updates
+- 13 total panels in workspace (11 from previous phases + 2 new visible + 1 integration component)
+- Queue panel with 5s auto-refresh, priority sorting, retry/cancel actions
+- Failures panel with bar chart visualization, multi-dimensional filtering, recurring detection
+- Recovery panel with checkpoint-based recovery and audit logs
+- All 0 ESLint errors, dev server compiles and runs successfully

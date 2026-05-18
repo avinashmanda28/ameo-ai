@@ -333,7 +333,7 @@ export function ExecutionPanel() {
           }
         }
       } catch (err) {
-        console.warn('[Nexus OS] Failed to fetch executions:', err);
+        console.warn('[Ameo AI] Failed to fetch executions:', err);
       }
     }
     fetchExecutions();
@@ -369,7 +369,7 @@ export function ExecutionPanel() {
         }
       }
     } catch (err) {
-      console.warn('[Nexus OS] Execution failed:', err);
+      console.warn('[Ameo AI] Execution failed:', err);
     } finally {
       setIsExecuting(false);
     }
@@ -390,7 +390,7 @@ export function ExecutionPanel() {
         }
       }
     } catch (err) {
-      console.warn('[Nexus OS] Verification failed:', err);
+      console.warn('[Ameo AI] Verification failed:', err);
     } finally {
       setVerifying(false);
     }
