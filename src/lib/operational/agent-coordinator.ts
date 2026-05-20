@@ -9,7 +9,6 @@ import { db } from '@/lib/db';
 import type {
   AgentCoordination,
   CoordinationTaskType,
-  CoordinationStatus,
 } from '@/lib/types';
 
 // ─── Types ───
@@ -432,7 +431,11 @@ class AgentCoordinator {
     let failedTasks = 0;
     let handedOffTasks = 0;
     let expiredTasks = 0;
-    const agentsById: CoordinationStatus['agentsById'] = {};
+    const agentsById: Record<string, {
+    agentType: string | null;
+    activeTaskCount: number;
+    lockedTaskCount: number;
+  }> = {};
 
     for (const task of allTasks) {
       switch (task.status) {

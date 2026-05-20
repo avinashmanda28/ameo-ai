@@ -105,11 +105,12 @@ class EventBus {
     });
 
     // Notify in-memory subscribers
-    this.notifySubscribers(params.eventType, event);
+    const typedEvent = event as unknown as SystemEvent;
+    this.notifySubscribers(params.eventType, typedEvent);
     // Also notify wildcard subscribers
-    this.notifySubscribers('*', event);
+    this.notifySubscribers('*', typedEvent);
 
-    return event as unknown as SystemEvent;
+    return typedEvent;
   }
 
   /**

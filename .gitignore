@@ -30,25 +30,48 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
 
 # vercel
 .vercel
-
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 local-*
+
+# tool configs (internal)
 .claude
 .z-ai-config
+.zscripts/
+
+# logs
 *.log
 dev.log
 dev.out.log
-test
-prompt
-
 server.log
-# Skills directory
+
+# database
+db/*.db
+db/*.db-journal
+
+# temporary & internal
+test/
+prompt/
+agent-ctx/
+download/
+upload/
+worklog.md
+BUILD_REPORT*.md
+
+# skills (not part of core repo)
 /skills/
+
+# Caddyfile (deployment-specific)
+Caddyfile

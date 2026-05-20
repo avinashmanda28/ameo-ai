@@ -253,7 +253,7 @@ class LineageTracker {
     const workflow = allTraces.find((t) => t.subsystem === 'workflow') as ExecutionTrace | undefined;
     const verification = allTraces.find((t) => t.subsystem === 'governance' && t.operation === 'verify') as ExecutionTrace | undefined;
     const artifact = allTraces.find((t) => t.subsystem === 'artifact') as ExecutionTrace | undefined;
-    const audit = allTraces.filter((t) => t.subsystem === 'governance' && t.operation !== 'verify') as ExecutionTrace[];
+    const audit = allTraces.filter((t) => t.subsystem === 'governance' && t.operation !== 'verify') as unknown as ExecutionTrace[];
 
     return {
       execution: execution ?? null,
