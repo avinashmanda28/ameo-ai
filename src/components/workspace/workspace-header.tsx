@@ -17,7 +17,8 @@ import {
 import { useWorkspaceStore } from '@/lib/store/workspace-store';
 import { WORKSPACE_MODES, type WorkspaceMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Check, Pencil, X } from 'lucide-react';
+import { signOut } from 'next-auth/react';
+import { Check, LogOut, Pencil, X } from 'lucide-react';
 import { useExecutionStore } from '@/lib/store/execution-store';
 
 // ─── Panel labels map ──────────────────────────────────────────
@@ -250,6 +251,18 @@ export function WorkspaceHeader() {
 
         {/* Agent status dots */}
         <AgentStatusIndicators />
+
+        <Separator orientation="vertical" className="h-5" />
+
+        {/* Sign out */}
+        <button
+          onClick={() => signOut({ callbackUrl: '/login' })}
+          className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-destructive transition-colors px-2 py-1 rounded-md hover:bg-destructive/5"
+          title="Sign out"
+        >
+          <LogOut className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Sign out</span>
+        </button>
       </div>
     </header>
   );
