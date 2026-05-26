@@ -141,6 +141,51 @@ cp .env.example .env
 
 See [`.env.example`](.env.example) for the full reference.
 
+## CI/CD Pipeline
+
+This project includes a GitHub Actions CI workflow (`.github/workflows/ci.yml`) that runs on every push to `main` and on pull requests:
+
+- ✅ TypeScript type checking (`tsc --noEmit`)
+- ✅ ESLint linting
+- ✅ Production build (`next build`)
+
+### Setup: GitHub Secrets
+
+The CI pipeline needs certain environment variables to build successfully.
+Configure these in your GitHub repository under **Settings → Secrets and variables → Actions**:
+
+| Secret | Value |
+|---|---|
+| `DATABASE_URL` | Your PostgreSQL connection string (transaction pooler) |
+| `DIRECT_URL` | Your PostgreSQL connection string (session pooler, for migrations) |
+| `NEXTAUTH_SECRET` | Run `openssl rand -base64 32` to generate one |
+| `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL (e.g., `https://xxx.supabase.co`) |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Your Supabase anonymous publishable key |
+
+To add these secrets:
+
+1. Go to **GitHub → Your Repository → Settings → Secrets and variables → Actions**
+2. Click **New repository secret** for each variable above
+3. Use the same values from your local `.env` file
+
+### Running Migrations in CI
+
+For automated database migrations in CI, add a dedicated migration job (requires setting up a Supabase connection in CI):
+
+```yaml
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+```
+
 ## Project Structure
 
 ```
