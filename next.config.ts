@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
   reactStrictMode: true,
+  serverExternalPackages: ["bcryptjs"],
 };
 
 export default nextConfig;
