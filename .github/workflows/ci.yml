@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  validate:
+    name: TypeScript & Lint & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
+          DIRECT_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Build
+        run: bun run build
+        env:
+          DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
+          DIRECT_URL: "postgresql://postgres:postgres@localhost:5432/postgres"
+          NEXTAUTH_SECRET: "ci-secret-do-not-use-in-production"
+          NEXTAUTH_URL: "http://localhost:3000"
+          NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "ci-key"
