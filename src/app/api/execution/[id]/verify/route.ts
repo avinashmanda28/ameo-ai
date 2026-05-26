@@ -30,7 +30,7 @@ export async function POST(
     // Try to use RuntimeEngine for verification
     let verifyResult
     try {
-      const { RuntimeEngine } = await import('@/lib/runtime/engine')
+      const { RuntimeEngine } = await import('@/lib/engine/engine')
       const engine = new RuntimeEngine()
       verifyResult = await engine.verify(executionId, db)
     } catch (engineError) {

@@ -49,17 +49,9 @@ local-*
 # tool configs (internal)
 .claude
 .z-ai-config
-.zscripts/
 
 # logs
 *.log
-dev.log
-dev.out.log
-server.log
-
-# database
-db/*.db
-db/*.db-journal
 
 # temporary & internal
 test/
@@ -70,8 +62,5 @@ upload/
 worklog.md
 BUILD_REPORT*.md
 
-# skills (not part of core repo)
-/skills/
-
-# Caddyfile (deployment-specific)
-Caddyfile
+# build artifacts
+*.tsbuildinfo

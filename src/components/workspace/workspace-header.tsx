@@ -14,12 +14,12 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { useWorkspaceStore } from '@/lib/store/workspace-store';
+import { useWorkspaceStore } from '@/lib/stores/workspace-store';
 import { WORKSPACE_MODES, type WorkspaceMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { signOut } from 'next-auth/react';
 import { Check, LogOut, Pencil, X } from 'lucide-react';
-import { useExecutionStore } from '@/lib/store/execution-store';
+import { useExecutionStore } from '@/lib/stores/execution-store';
 
 // ─── Panel labels map ──────────────────────────────────────────
 

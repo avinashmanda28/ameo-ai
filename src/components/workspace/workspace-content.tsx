@@ -18,23 +18,23 @@ import {
   AlertOctagon,
   Eye,
 } from 'lucide-react';
-import { useWorkspaceStore } from '@/lib/store/workspace-store';
+import { useWorkspaceStore } from '@/lib/stores/workspace-store';
 import { Skeleton } from '@/components/ui/skeleton';
 import { OverviewPanel } from './overview-panel';
-import { WorkflowEnginePanel } from '@/components/workflows/workflow-engine-panel';
-import { GovernancePanel } from '@/components/governance/governance-panel';
-import { CompanyGraphPanel } from '@/components/company/company-graph-panel';
-import { RuntimeHubPanel } from '@/components/runtime/runtime-hub-panel';
-import { AgentPanel } from '@/components/agents/agent-panel';
-import { ReportsPanel } from '@/components/reports/reports-panel';
-import { TerminalPanel } from '@/components/reports/terminal-panel';
-import { ExecutionPanel } from '@/components/execution/execution-panel';
-import { ArtifactPanel } from '@/components/artifacts/artifact-panel';
-import { RuntimeMetricsPanel } from '@/components/execution/runtime-metrics-panel';
-import { QueuePanel } from '@/components/execution/queue-panel';
-import { FailuresPanel } from '@/components/execution/failures-panel';
-import { DeveloperConsolePanel } from '@/components/operational/developer-console-panel';
-import { ObservabilityPanel } from '@/components/operational/observability-panel';
+import { WorkflowEnginePanel } from '@/components/features/workflows/workflow-engine-panel';
+import { GovernancePanel } from '@/components/features/governance/governance-panel';
+import { CompanyGraphPanel } from '@/components/features/company/company-graph-panel';
+import { RuntimeHubPanel } from '@/components/features/runtime/runtime-hub-panel';
+import { AgentPanel } from '@/components/features/agents/agent-panel';
+import { ReportsPanel } from '@/components/features/monitoring/reports-panel';
+import { TerminalPanel } from '@/components/features/monitoring/terminal-panel';
+import { ExecutionPanel } from '@/components/features/execution/execution-panel';
+import { ArtifactPanel } from '@/components/features/artifacts/artifact-panel';
+import { RuntimeMetricsPanel } from '@/components/features/execution/runtime-metrics-panel';
+import { QueuePanel } from '@/components/features/execution/queue-panel';
+import { FailuresPanel } from '@/components/features/execution/failures-panel';
+import { DeveloperConsolePanel } from '@/components/features/monitoring/developer-console-panel';
+import { ObservabilityPanel } from '@/components/features/monitoring/observability-panel';
 
 // ─── Panel Configuration ───────────────────────────────────────
 

@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     // Try to use RuntimeEngine if available
     let engineResult
     try {
-      const { RuntimeEngine } = await import('@/lib/runtime/engine')
+      const { RuntimeEngine } = await import('@/lib/engine/engine')
       const engine = new RuntimeEngine()
       engineResult = await engine.execute({
         db,

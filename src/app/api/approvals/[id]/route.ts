@@ -112,7 +112,7 @@ export async function POST(
 
           // Attempt to resume execution via engine
           try {
-            const { RuntimeEngine } = await import('@/lib/runtime/engine')
+            const { RuntimeEngine } = await import('@/lib/engine/engine')
             const engine = new RuntimeEngine()
             await engine.resumeAfterApproval(execution.id, true, db)
           } catch (engineError) {

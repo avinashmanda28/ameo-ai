@@ -19,6 +19,8 @@ providers — all within a unified, auditable runtime.
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-1-3FCF8E?logo=supabase&logoColor=white)](https://supabase.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-22C55E)](./LICENSE)
 
 ---
@@ -62,7 +64,7 @@ action is traceable, recoverable, and auditable.
 │  └────┬─────┘ └───┬────┘ └─────┬──────┘ └────┬─────┘ └────┬────┘  │
 │       │             │            │               │             │      │
 │  ─────┼─────────────┼────────────┼───────────────┼─────────────┼───  │
-│       │          OPERATIONAL LAYER                │             │      │
+│       │            SERVICES LAYER                │             │      │
 │  ┌────┴─────────────┴────────────┴───────────────┴─────────────┴──┐ │
 │  │  Event Bus · Lineage Tracker · Health Monitor · Coordinator     │ │
 │  │  Failure Classifier · Sandbox Manager · Graph Analyzer          │ │
@@ -78,7 +80,7 @@ action is traceable, recoverable, and auditable.
 │                             │                                       │
 │  ┌──────────────────────────┴─────────────────────────────────────┐ │
 │  │                    PERSISTENCE LAYER                            │ │
-│  │              Prisma ORM  ·  SQLite  ·  24 Models               │ │
+│  │              Prisma ORM  ·  PostgreSQL / Supabase              │ │
 │  └────────────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────────┘
 ```
@@ -89,6 +91,7 @@ action is traceable, recoverable, and auditable.
 
 - [Node.js](https://nodejs.org/) 18+ or [Bun](https://bun.sh/)
 - A package manager (npm, yarn, pnpm, or bun)
+- Access to a [Supabase](https://supabase.com) PostgreSQL database (or any PostgreSQL instance)
 
 ### Installation
 
@@ -103,11 +106,13 @@ bun install
 
 # Set up environment variables
 cp .env.example .env
-# Edit .env and add your API keys (see Environment Variables below)
+# Edit .env and add your configuration (see Environment Variables below)
 
-# Initialize the database
+# Generate Prisma client
+bun run db:generate
+
+# Push schema to database
 bun run db:push
-# or: npx prisma db push
 
 # Start the development server
 bun run dev
@@ -125,7 +130,7 @@ cp .env.example .env
 
 | Variable | Description | Required |
 |---|---|---|
-| `DATABASE_URL` | SQLite database path | Yes |
+| `DATABASE_URL` | PostgreSQL connection string (Supabase or your own) | Yes |
 | `NEXTAUTH_URL` | Application URL for NextAuth | Yes |
 | `NEXTAUTH_SECRET` | Secret for NextAuth sessions (generate with `openssl rand -base64 32`) | Yes |
 | `OPENROUTER_API_KEY` | OpenRouter API key | At least one provider |
@@ -141,67 +146,81 @@ See [`.env.example`](.env.example) for the full reference.
 ```
 src/
 ├── app/                        # Next.js App Router
-│   ├── api/                   # 40+ API routes
-│   │   ├── execution/         # Runtime execution, verification
-│   │   ├── workflows/         # Workflow lifecycle, recovery, transitions
-│   │   ├── queue/             # Execution queue, retry, processing
-│   │   ├── governance/        # Governance rules, audit logs
-│   │   ├── approvals/         # Approval requests
-│   │   ├── agents/            # Agent management, logs
-│   │   ├── artifacts/         # Artifact CRUD
-│   │   ├── events/            # Event bus queries
-│   │   ├── traces/            # Execution lineage
-│   │   ├── ratings/           # Build rating engine
-│   │   ├── company/           # Company graph
-│   │   ├── runtime/           # AI provider management, health checks
-│   │   ├── observability/     # System observability
-│   │   └── ...                # Health, coordination, snapshots, failures
-│   ├── layout.tsx
-│   ├── page.tsx
-│   └── globals.css
+│   ├── (auth)/                 # Auth pages (login, signup)
+│   ├── api/                    # 39 API route handlers
+│   │   ├── execution/          # Runtime execution, verification
+│   │   ├── workflows/          # Workflow lifecycle, recovery, transitions
+│   │   ├── queue/              # Execution queue, retry, processing
+│   │   ├── governance/         # Governance rules, audit logs
+│   │   ├── approvals/          # Approval request management
+│   │   ├── agents/             # Agent management, logs
+│   │   ├── auth/               # NextAuth authentication
+│   │   ├── register/           # User registration
+│   │   ├── artifacts/          # Artifact CRUD
+│   │   ├── events/             # Event bus queries
+│   │   ├── traces/             # Execution lineage
+│   │   ├── ratings/            # Build rating engine
+│   │   ├── company/            # Company graph management
+│   │   ├── runtime/            # AI provider management, health checks
+│   │   └── ...                 # Health, coordination, workspace, etc.
+│   ├── layout.tsx              # Root layout with providers
+│   ├── page.tsx                # Home page (workspace shell)
+│   ├── loading.tsx             # Loading state
+│   ├── error.tsx               # Error boundary
+│   ├── not-found.tsx           # 404 page
+│   ├── providers.tsx           # SessionProvider, ThemeProvider, Toaster
+│   └── globals.css             # Global styles + theme variables
 ├── components/
-│   ├── ui/                    # 52 shadcn/ui components
-│   ├── workspace/             # Shell, sidebar, header, content panels
-│   ├── runtime/               # Runtime hub panel
-│   ├── workflows/             # Workflow engine, recovery panels
-│   ├── governance/            # Governance panel
-│   ├── agents/                # Agent fleet panel
-│   ├── execution/             # Execution, queue, failures, metrics panels
-│   ├── operational/           # Developer console, observability panel
-│   ├── artifacts/             # Artifact viewer panel
-│   ├── approvals/             # Approval banner
-│   ├── company/               # Company graph panel
-│   └── reports/               # Reports, terminal panels
+│   ├── ui/                     # 50+ shadcn/ui primitives
+│   ├── workspace/              # Shell, sidebar, header, content, overview
+│   └── features/               # Feature-specific panels
+│       ├── agents/             # Agent fleet panel
+│       ├── approvals/          # Approval banner
+│       ├── artifacts/          # Artifact viewer panel
+│       ├── company/            # Company graph panel
+│       ├── execution/          # Execution, queue, failures, metrics
+│       ├── governance/         # Governance panel
+│       ├── monitoring/         # Developer console, observability, reports, terminal
+│       ├── runtime/            # Runtime hub panel
+│       └── workflows/          # Workflow engine, recovery panels
+├── config/                     # Application configuration
+│   ├── auth.ts                 # NextAuth v4 configuration
+│   └── supabase.ts             # Supabase client setup
+├── database/                   # Data layer
+│   └── client.ts               # Prisma client singleton
+├── engine/                     # Runtime execution engine
+│   ├── engine.ts               # Core engine orchestration
+│   ├── router.ts               # Multi-provider routing
+│   ├── verifier.ts             # Response verification
+│   ├── failure-classifier.ts   # Failure classification
+│   ├── queue-manager.ts        # Execution queue management
+│   ├── types.ts                # Runtime type definitions
+│   └── adapters/               # AI provider adapters
+│       ├── openrouter.ts
+│       ├── groq.ts
+│       ├── gemini.ts
+│       └── ollama.ts
+├── services/                   # Operational services
+│   ├── event-bus.ts            # Correlated event system
+│   ├── agent-coordinator.ts    # Multi-agent coordination
+│   ├── lineage-tracker.ts      # Execution lineage tracking
+│   ├── health-monitor.ts       # System health metrics
+│   ├── sandbox-manager.ts      # Sandbox management
+│   ├── graph-analyzer.ts       # Company graph analysis
+│   └── state-consistency.ts    # State drift detection
+├── stores/                     # Zustand state management
+│   ├── workspace-store.ts
+│   ├── execution-store.ts
+│   └── operational-store.ts
+├── types/                      # Shared type definitions
+│   ├── index.ts                # Master type definitions
+│   └── next-auth.d.ts          # NextAuth type augmentation
+├── utils/                      # Utility functions
+│   └── helpers.ts              # cn(), and other helpers
 ├── hooks/                      # Custom React hooks
-├── lib/
-│   ├── db.ts                  # Prisma client singleton
-│   ├── types/index.ts         # Master type definitions
-│   ├── utils.ts               # Utility functions
-│   ├── store/                 # Zustand stores
-│   │   ├── workspace-store.ts
-│   │   ├── execution-store.ts
-│   │   └── operational-store.ts
-│   ├── runtime/               # Runtime execution engine
-│   │   ├── engine.ts          # Core engine orchestration
-│   │   ├── router.ts          # Multi-provider routing
-│   │   ├── adapter-openrouter.ts
-│   │   ├── adapter-groq.ts
-│   │   ├── adapter-gemini.ts
-│   │   ├── adapter-ollama.ts
-│   │   ├── verifier.ts        # Response verification
-│   │   ├── failure-classifier.ts
-│   │   ├── queue-manager.ts   # Execution queue management
-│   │   └── types.ts
-│   └── operational/           # Operational cohesion layer
-│       ├── event-bus.ts       # Correlated event system
-│       ├── agent-coordinator.ts
-│       ├── lineage-tracker.ts # Execution lineage
-│       ├── health-monitor.ts  # System health metrics
-│       ├── sandbox-manager.ts
-│       ├── graph-analyzer.ts  # Company graph analysis
-│       └── state-consistency.ts
-prisma/
-├── schema.prisma              # 24 models
+│   ├── use-toast.ts
+│   └── use-mobile.ts
+└── middleware.ts               # Route protection middleware
 ```
 
 ## API Routes
@@ -287,10 +306,19 @@ prisma/
 | `GET` | `/api/snapshots` | State snapshots |
 | `GET` | `/api/health` | System health check |
 | `GET` | `/api/workspace` | Workspace info |
+| `POST` | `/api/register` | Create a new user account |
 
 ## Database Schema
 
-Ameo AI uses **24 Prisma models** organized into functional domains:
+Ameo AI uses **25 Prisma models** organized into functional domains:
+
+### Authentication
+
+| Model | Description |
+|---|---|
+| `User` | Platform user with credentials and profile |
+| `Account` | OAuth provider accounts |
+| `Session` | User session management |
 
 ### Workspace & Company
 
@@ -383,13 +411,13 @@ bun run lint           # Run ESLint
 | Framework | Next.js 16 (App Router, Server Components) |
 | Language | TypeScript 5 |
 | Styling | Tailwind CSS 4 + shadcn/ui |
-| ORM | Prisma 6 (SQLite) |
+| ORM | Prisma 6 (PostgreSQL via Supabase) |
 | State | Zustand |
 | Animations | Framer Motion |
-| Auth | NextAuth v4 |
-| 3D | React Three Fiber / Three.js |
+| Auth | NextAuth v4 (Credentials + JWT) |
 | Data Fetching | TanStack React Query |
 | Forms | React Hook Form + Zod |
+| Database | PostgreSQL 15 (Supabase) |
 
 ## Contributing
 

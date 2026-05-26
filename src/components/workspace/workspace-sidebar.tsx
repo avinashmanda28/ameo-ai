@@ -21,7 +21,7 @@ import {
   AlertOctagon,
   Eye,
 } from 'lucide-react';
-import { useWorkspaceStore } from '@/lib/store/workspace-store';
+import { useWorkspaceStore } from '@/lib/stores/workspace-store';
 import { WORKSPACE_MODES, type WorkspaceMode } from '@/lib/types';
 import {
   Sidebar,

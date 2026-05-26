@@ -25,7 +25,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useWorkspaceStore } from '@/lib/store/workspace-store';
+import { useWorkspaceStore } from '@/lib/stores/workspace-store';
 import { WORKSPACE_MODES, WORKFLOW_STATE_COLORS, AGENT_STATUS_COLORS } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';

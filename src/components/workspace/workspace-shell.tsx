@@ -3,8 +3,8 @@
 import React, { useEffect } from 'react';
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useWorkspaceStore } from '@/lib/store/workspace-store';
-import { useExecutionStore } from '@/lib/store/execution-store';
+import { useWorkspaceStore } from '@/lib/stores/workspace-store';
+import { useExecutionStore } from '@/lib/stores/execution-store';
 import type { ApiResponse } from '@/lib/types';
 import type {
   Workspace,
@@ -19,7 +19,7 @@ import type {
 import { WorkspaceSidebar } from './workspace-sidebar';
 import { WorkspaceHeader } from './workspace-header';
 import { WorkspaceContent } from './workspace-content';
-import { ApprovalBanner } from '@/components/approvals/approval-banner';
+import { ApprovalBanner } from '@/components/features/approvals/approval-banner';
 
 // ─── Data Fetching ─────────────────────────────────────────────
 
