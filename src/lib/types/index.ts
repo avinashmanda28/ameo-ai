@@ -47,12 +47,12 @@ export const COMPANY_TYPE_ICONS: Record<CompanyType, string> = {
 };
 
 export const COMPANY_TYPE_COLORS: Record<CompanyType, string> = {
-  company: 'text-emerald-600',
-  project: 'text-amber-600',
-  product: 'text-violet-600',
-  service: 'text-sky-600',
-  team: 'text-rose-600',
-  member: 'text-slate-600',
+  company: 'text-blue-600',
+  project: 'text-blue-500',
+  product: 'text-slate-600',
+  service: 'text-blue-500',
+  team: 'text-slate-600',
+  member: 'text-slate-500',
 };
 
 // ─── Runtime Hub ───
@@ -98,10 +98,10 @@ export const RUNTIME_TYPE_LABELS: Record<RuntimeType, string> = {
 };
 
 export const RUNTIME_TYPE_COLORS: Record<RuntimeType, string> = {
-  openrouter: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
-  groq: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-  gemini: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-  ollama: 'bg-slate-100 text-slate-800 dark:bg-slate-900/30 dark:text-slate-400',
+  openrouter: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+  groq: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+  gemini: 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400',
+  ollama: 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400',
 };
 
 // ─── Workflow Engine ───
@@ -175,12 +175,12 @@ export interface WorkflowDependency {
 
 export const WORKFLOW_STATE_COLORS: Record<WorkflowState, string> = {
   draft: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
-  validated: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
-  active: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  validated: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  active: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   blocked: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  recovering: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  completed: 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
-  archived: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+  recovering: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+  completed: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+  archived: 'bg-slate-50 text-slate-500 dark:bg-slate-800 dark:text-slate-500',
 };
 
 export const WORKFLOW_STATE_LABELS: Record<WorkflowState, string> = {
@@ -194,11 +194,11 @@ export const WORKFLOW_STATE_LABELS: Record<WorkflowState, string> = {
 };
 
 export const EXECUTION_STATUS_COLORS: Record<ExecutionStatus, string> = {
-  pending: 'text-slate-500',
-  running: 'text-sky-500',
-  completed: 'text-emerald-500',
+  pending: 'text-slate-400',
+  running: 'text-blue-500',
+  completed: 'text-blue-600',
   failed: 'text-red-500',
-  cancelled: 'text-gray-400',
+  cancelled: 'text-slate-400',
 };
 
 // ─── Governance Kernel ───
@@ -243,8 +243,8 @@ export const RULE_TYPE_LABELS: Record<RuleType, string> = {
 
 export const RULE_SEVERITY_COLORS: Record<RuleSeverity, string> = {
   low: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
-  medium: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  high: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+  medium: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  high: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
   critical: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 };
 
@@ -296,20 +296,20 @@ export const AGENT_TYPE_DESCRIPTIONS: Record<AgentType, string> = {
 };
 
 export const AGENT_TYPE_COLORS: Record<AgentType, string> = {
-  head: 'bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-400',
-  builder: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
-  qa: 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400',
-  verification: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
-  terminal: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-  governance: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+  head: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+  builder: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+  qa: 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400',
+  verification: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+  terminal: 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400',
+  governance: 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400',
 };
 
 export const AGENT_STATUS_COLORS: Record<AgentStatus, string> = {
   idle: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
-  active: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-  busy: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  active: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  busy: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   error: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  suspended: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+  suspended: 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-500',
 };
 
 // ─── Build Rating Engine ───
@@ -371,22 +371,22 @@ export type ApprovalRequestType = 'runtime_execution' | 'deployment' | 'data_exp
 
 export const EXECUTION_RUN_STATUS_COLORS: Record<ExecutionRunStatus, string> = {
   pending: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
-  awaiting_approval: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  approved: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  awaiting_approval: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+  approved: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   rejected: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  executing: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
-  completed: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  executing: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  completed: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
   failed: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  timed_out: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+  timed_out: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
 };
 
 export const ARTIFACT_TYPE_COLORS: Record<ArtifactType, string> = {
-  code: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400',
-  report: 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400',
-  plan: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
-  spec: 'bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-400',
-  analysis: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400',
-  architecture: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
+  code: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+  report: 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400',
+  plan: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+  spec: 'bg-blue-50 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
+  analysis: 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400',
+  architecture: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
   general: 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400',
 };
 
@@ -394,7 +394,7 @@ export const ARTIFACT_TYPE_COLORS: Record<ArtifactType, string> = {
 
 // Event Bus
 export type EventLevel = 'debug' | 'info' | 'warn' | 'error' | 'critical';
-export type EventSource = 'workflow' | 'runtime' | 'queue' | 'governance' | 'agent' | 'artifact' | 'system';
+export type EventSource = 'workflow' | 'runtime' | 'queue' | 'governance' | 'agent' | 'artifact' | 'system' | 'integration-hub' | 'commerce-memory' | 'shopify-integration' | 'product-import' | 'product-page-generator' | 'creative-generation' | 'fulfillment-engine' | 'competitor-intelligence' | 'autonomous-execution' | 'revenue-operations';
 
 export interface SystemEvent {
   id: string;
@@ -416,9 +416,9 @@ export interface SystemEvent {
 }
 
 export const EVENT_LEVEL_COLORS: Record<EventLevel, string> = {
-  debug: 'text-slate-500',
-  info: 'text-sky-500',
-  warn: 'text-amber-500',
+  debug: 'text-slate-400',
+  info: 'text-blue-500',
+  warn: 'text-slate-500',
   error: 'text-red-500',
   critical: 'text-red-400 font-bold',
 };
@@ -465,11 +465,11 @@ export const TRACE_OPERATION_LABELS: Record<TraceOperation, string> = {
 };
 
 export const TRACE_STATUS_COLORS: Record<TraceStatus, string> = {
-  pending: 'text-slate-500',
-  running: 'text-sky-500',
-  completed: 'text-emerald-500',
+  pending: 'text-slate-400',
+  running: 'text-blue-500',
+  completed: 'text-blue-600',
   failed: 'text-red-500',
-  skipped: 'text-gray-400',
+  skipped: 'text-slate-400',
 };
 
 // Agent Coordination
@@ -503,12 +503,12 @@ export interface AgentCoordination {
 }
 
 export const COORDINATION_STATUS_COLORS: Record<CoordinationStatus, string> = {
-  claimed: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
-  active: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-  handed_off: 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
+  claimed: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  active: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  handed_off: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
   completed: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
   failed: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  expired: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+  expired: 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-500',
 };
 
 // State Snapshot
@@ -549,16 +549,16 @@ export interface SystemHealthMetric {
 }
 
 export const HEALTH_SEVERITY_COLORS: Record<HealthSeverity, string> = {
-  normal: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-  warning: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  degraded: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+  normal: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  warning: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+  degraded: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
   critical: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 };
 
 export const HEALTH_SEVERITY_DOT_COLORS: Record<HealthSeverity, string> = {
-  normal: 'bg-emerald-500',
-  warning: 'bg-amber-500',
-  degraded: 'bg-orange-500',
+  normal: 'bg-blue-500',
+  warning: 'bg-slate-400',
+  degraded: 'bg-slate-500',
   critical: 'bg-red-500 animate-pulse',
 };
 

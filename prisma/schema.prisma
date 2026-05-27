@@ -88,6 +88,60 @@ model Workspace {
   artifacts       Artifact[]
   executions      RuntimeExecution[]
   approvalRequests ApprovalRequest[]
+  products        Product[]
+  suppliers       Supplier[]
+  trends          Trend[]
+  stores          Store[]
+  orders          Order[]
+  automationRules AutomationRule[]
+  agentMemories   AgentMemory[]
+  commerceAnalytics CommerceAnalytic[]
+  trendSignals    TrendSignal[]
+  integrations    Integration[]
+  webhookEvents   WebhookEvent[]
+  campaigns       Campaign[]
+  creativeAssets  CreativeAsset[]
+  productPages    ProductPage[]
+  competitors     Competitor[]
+  competitorProducts CompetitorProduct[]
+  revenueMetrics  RevenueMetric[]
+  executionPolicies ExecutionPolicy[]
+
+  // PHASE 7 — AGI Marketplace & Ecosystem
+  marketplaceListings   MarketplaceListing[]
+  marketplaceReviews    MarketplaceReview[]
+  marketplaceDownloads  MarketplaceDownload[]
+  marketplaceCreators   MarketplaceCreator[]
+  plugins               Plugin[]
+  pluginInstallations   PluginInstallation[]
+  creatorProfiles       CreatorProfile[]
+  creatorStorefronts    CreatorStorefront[]
+  creatorPayouts        CreatorPayout[]
+  affiliateLinks        AffiliateLink[]
+  digitalProducts       DigitalProduct[]
+  subscriptions         Subscription[]
+  invoices              Invoice[]
+  creditAccounts        CreditAccount[]
+  usageRecords          UsageRecord[]
+  coupons               Coupon[]
+  referrals             Referral[]
+  copilotConversations  CopilotConversation[]
+  copilotRecommendations CopilotRecommendation[]
+  growthCampaigns       GrowthCampaign[]
+  emailTemplates        EmailTemplate[]
+  contentSchedules      ContentSchedule[]
+  contentArticles       ContentArticle[]
+  contentVersions       ContentVersion[]
+  publishingPipelines   PublishingPipeline[]
+  learningRecords       LearningRecord[]
+  feedbackRecords       FeedbackRecord[]
+  learningAdaptations   LearningAdaptation[]
+  trendAccuracies       TrendAccuracy[]
+  runtimeNodes          RuntimeNode[]
+  runtimeClusters       RuntimeCluster[]
+  executionRoutes       ExecutionRoute[]
+  failoverConfigs       FailoverConfig[]
+  coordinationCommands  CoordinationCommand[]
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -676,4 +730,2519 @@ model SystemHealthMetric {
   sourceEventId   String?  // links to SystemEvent that triggered this
 
   createdAt       DateTime @default(now())
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 2 — COMMERCE LAYER (AGI Commerce Operating System)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── PRODUCT — Product intelligence records ───
+
+model Product {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Core product data
+  name          String
+  description   String?
+  category      String?
+  subcategory   String?
+  brand         String?
+
+  // Commerce data
+  price         Float?
+  comparePrice  Float?   // original/comparison price
+  costPrice     Float?   // estimated cost for margin calculation
+  currency      String   @default("USD")
+  sku           String?
+  upc           String?  // Universal Product Code
+  ean           String?  // European Article Number
+
+  // Media
+  imageUrl      String?
+  galleryUrls   String?  // JSON array of image URLs
+  videoUrl      String?
+
+  // Supplier link
+  supplierId    String?
+  supplierUrl   String?  // original product URL on supplier platform
+  supplierSku   String?
+
+  // Intelligence scores (0-100)
+  trendScore            Float?  @default(0)
+  demandScore           Float?  @default(0)
+  competitionScore      Float?  @default(0)
+  saturationScore       Float?  @default(0)
+  profitEstimate        Float?  @default(0) // estimated profit margin
+  viralPotentialScore   Float?  @default(0)
+  marketOpportunityScore Float? @default(0)
+  overallScore          Float?  @default(0)
+
+  // AI analysis
+  aiSummary       String?  @db.Text
+  aiInsights      String?  // JSON — structured AI insights
+  analysisVersion Int      @default(1)
+  lastAnalyzedAt  DateTime?
+
+  // Platform source
+  sourcePlatform  String?  // amazon | aliexpress | alibaba | shopify | manual
+  sourceId        String?  // ID on the source platform
+
+  // Status & lifecycle
+  status          String   @default("discovered") // discovered | analyzing | analyzed | importing | imported | archived
+  tags            String?  // JSON array of tags
+  metadata        String?  // JSON — extensible metadata
+
+  // SEO
+  seoData         String?  // JSON — SEO metadata (titles, descriptions, tags, keywords)
+  optimizedAt     DateTime? // when the product was last SEO-optimized
+
+  // Store link
+  storeProductId  String?  // linked store product ID after import
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace  Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  supplier   Supplier? @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+  trends     Trend[]
+  orders     OrderItem[]
+  analytics  CommerceAnalytic[]
+  productPages ProductPage[]
+  campaigns    Campaign[]
+}
+
+// ─── SUPPLIER — Supplier intelligence records ───
+
+model Supplier {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Core supplier data
+  name          String
+  description   String?
+  platform      String   // alibaba | aliexpress | amazon | shopify | other
+  platformUrl   String?
+  platformId    String?  // ID on the supplier platform
+
+  // Contact
+  contactName   String?
+  contactEmail  String?
+  contactPhone  String?
+  country       String?
+  city          String?
+  address       String?
+
+  // Ratings & trust
+  rating        Float?   @default(0) // 0-5
+  reviewCount   Int?     @default(0)
+  orderCount    Int?     @default(0)
+  responseRate  Float?   @default(0) // 0-100
+  responseTime  String?  // e.g., "within 1 hour"
+
+  // Intelligence scores (0-100)
+  trustScore        Float? @default(0)
+  shippingScore     Float? @default(0)
+  qualityScore      Float? @default(0)
+  pricingScore      Float? @default(0)
+  reliabilityScore  Float? @default(0)
+  overallScore      Float? @default(0)
+
+  // Shipping
+  shippingMethods  String? // JSON — available shipping methods & costs
+  estimatedDelivery String? // e.g., "7-15 days"
+  freeShippingMoa  Float?  // minimum order amount for free shipping
+
+  // MOQ (Minimum Order Quantity)
+  moqMin           Int?    @default(1)
+  moqMax           Int?
+  moqDetails       String?
+
+  // Verification
+  verifiedBadge    Boolean @default(false)
+  verifiedAt       DateTime?
+  verificationDoc  String? // URL to verification document
+
+  // Risk
+  riskScore        Float?  @default(0) // 0-100 (higher = more risky)
+  riskFactors      String? // JSON — detailed risk factors
+
+  // Status
+  status           String   @default("discovered") // discovered | verified | active | suspended | archived
+  tags             String?  // JSON array of tags
+  metadata         String?  // JSON — extensible metadata
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  products  Product[]
+  prices    SupplierPrice[]
+  orderItems OrderItem[]
+}
+
+// ─── TREND — Trend discovery records ───
+
+model Trend {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Trend identification
+  name          String
+  keyword       String
+  description   String?
+  category      String?
+  source        String   // tiktok | meta_ads | google_trends | amazon_movers | ecommerce_signal
+
+  // Scoring (0-100)
+  viralScore         Float? @default(0)
+  momentumScore      Float? @default(0)
+  accelerationScore  Float? @default(0)
+  marketTimingScore  Float? @default(0)
+  opportunityScore   Float? @default(0)
+  overallScore       Float? @default(0)
+
+  // Timing
+  firstDetectedAt    DateTime?
+  peakAt             DateTime?
+  estimatedWindowEnd DateTime?
+
+  // Metrics
+  searchVolume       Int?     // estimated monthly searches
+  growthRate         Float?   // percentage growth week-over-week
+  competitionLevel   String?  // low | medium | high | saturated
+  relatedKeywords    String?  // JSON array of related keywords
+
+  // Commerce link
+  productId          String?
+  suggestedPrice     Float?
+  suggestedMargin    Float?
+
+  // AI analysis
+  aiInsights         String?  @db.Text // AI-generated trend analysis
+  aiRecommendation   String?  // buy | watch | skip
+  analysisVersion    Int      @default(1)
+  lastAnalyzedAt     DateTime?
+
+  // Status
+  status             String   @default("discovered") // discovered | analyzing | active | declining | archived
+  metadata           String?  // JSON — extensible metadata
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  product   Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  signals   TrendSignal[]
+}
+
+// ─── STORE — Connected commerce stores ───
+
+model Store {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Store identity
+  name          String
+  platform      String   // shopify | woocommerce | custom
+  platformUrl   String?
+  platformId    String?  // platform's store ID
+
+  // API credentials (encrypted at application level)
+  apiKey        String?
+  apiSecret     String?
+  accessToken   String?
+  webhookSecret String?
+
+  // Configuration
+  config        String?  // JSON — store-specific configuration
+  settings      String?  // JSON — automation settings
+
+  // Status
+  status        String   @default("disconnected") // disconnected | connecting | connected | error | archived
+  lastSyncAt    DateTime?
+  syncStatus    String?  // idle | syncing | error
+  syncError     String?
+
+  // Metrics
+  totalProducts  Int?    @default(0)
+  totalOrders    Int?    @default(0)
+  totalRevenue   Float?  @default(0)
+  currency       String  @default("USD")
+  timezone       String? @default("UTC")
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  workspace Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  orders    Order[]
+  rules     AutomationRule[]
+}
+
+// ─── ORDER — Order management ───
+
+model Order {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  storeId       String?
+
+  // Order identity
+  orderNumber   String?
+  platformOrderId String? // order ID on the commerce platform
+  platform      String?  // shopify | woocommerce | custom
+
+  // Customer
+  customerName  String?
+  customerEmail String?
+  customerPhone String?
+  shippingAddress String? // JSON
+  billingAddress  String? // JSON
+
+  // Financial
+  subtotal      Float?   @default(0)
+  shippingCost  Float?   @default(0)
+  tax           Float?   @default(0)
+  total         Float?   @default(0)
+  currency      String   @default("USD")
+  discount      Float?   @default(0)
+  profitEstimate Float?  // estimated profit
+
+  // Status
+  status        String   @default("pending") // pending | confirmed | processing | shipped | delivered | cancelled | returned
+  fulfillmentStatus String @default("unfulfilled") // unfulfilled | partially_fulfilled | fulfilled | cancelled
+  trackingNumber String?
+  trackingUrl    String?
+  carrier        String?
+
+  // Shipping
+  shippingMethod String?
+  estimatedDelivery DateTime?
+  deliveredAt    DateTime?
+
+  // Fulfillment automation
+  fulfillmentRuleId String?
+  autoFulfilled    Boolean @default(false)
+  fulfillmentError String?
+
+  // Timeline
+  confirmedAt    DateTime?
+  processedAt    DateTime?
+  shippedAt      DateTime?
+  cancelledAt    DateTime?
+  returnedAt     DateTime?
+
+  // Metadata
+  tags           String?  // JSON array
+  notes          String?
+  metadata       String?  // JSON — extensible
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  workspace Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  store     Store?       @relation(fields: [storeId], references: [id], onDelete: SetNull)
+  items     OrderItem[]
+}
+
+model OrderItem {
+  id            String   @id @default(cuid())
+  orderId       String
+  productId     String?
+
+  // Item data
+  name          String
+  sku           String?
+  quantity      Int      @default(1)
+  unitPrice     Float?   @default(0)
+  totalPrice    Float?   @default(0)
+  currency      String   @default("USD")
+
+  // Supplier data
+  supplierId    String?
+  supplierSku   String?
+  costPrice     Float?   // per-unit cost from supplier
+
+  // Fulfillment
+  trackingNumber String?
+  trackingUrl    String?
+  carrier        String?
+  status         String   @default("pending") // pending | ordered | shipped | delivered | cancelled
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  order    Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product  Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  supplier Supplier? @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+}
+
+// ─── AUTOMATION RULES — Store automation configuration ───
+
+model AutomationRule {
+  id          String   @id @default(cuid())
+  workspaceId String
+  storeId     String?
+
+  // Rule identity
+  name        String
+  type        String   // pricing | inventory | fulfillment | product_import | order | custom
+  description String?
+
+  // Conditions (JSON — evaluated at runtime)
+  conditions  String?  // JSON — when to trigger
+  actions     String?  // JSON — what to do
+  schedule    String?  // cron expression or interval
+
+  // Status
+  enabled     Boolean  @default(true)
+  status      String   @default("active") // active | paused | error | archived
+  lastRunAt   DateTime?
+  lastError   String?
+  runCount    Int      @default(0)
+  successCount Int     @default(0)
+  failCount   Int      @default(0)
+
+  // Governance
+  requiresApproval Boolean @default(false)
+  approvalStatus   String? // pending | approved | rejected
+
+  // Metadata
+  config      String?  // JSON — rule-specific configuration
+  tags        String?  // JSON array
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  store     Store?    @relation(fields: [storeId], references: [id], onDelete: SetNull)
+}
+
+// ─── AGENT MEMORY — Commerce agent knowledge & state ───
+
+model AgentMemory {
+  id              String   @id @default(cuid())
+  workspaceId     String
+
+  // Agent identity
+  agentId         String   // which agent this memory belongs to
+  agentType       String   // product_hunter | trend_analyst | supplier_analyst | pricing_agent | seo_agent | store_builder | ad_creative | analytics_agent | fulfillment_agent | verification_agent
+
+  // Memory data
+  memoryType      String   // knowledge | state | preference | result | decision
+  key             String   // memory key for lookup
+  value           String   @db.Text // memory value (JSON or text)
+
+  // Context
+  resourceType    String?  // product | supplier | trend | store | order | rule
+  resourceId      String?
+  ttl             DateTime? // time-to-live for ephemeral memories
+
+  // Metadata
+  confidence      Float?   @default(1.0) // 0-1 confidence in this memory
+  version         Int      @default(1)
+  tags            String?  // JSON array
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([agentId, key])
+}
+
+// ─── COMMERCE ANALYTICS — Aggregated commerce metrics ───
+
+model CommerceAnalytic {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // What's being measured
+  metricType    String   // revenue | profit | orders | fulfillment_rate | trend_success | supplier_performance | automation_efficiency | agent_performance
+  period        String   // hourly | daily | weekly | monthly | yearly
+  periodStart   DateTime
+  periodEnd     DateTime
+
+  // Values
+  value         Float
+  previousValue Float?   // value for previous period for comparison
+  changePercent Float?   // percentage change from previous
+
+  // Breakdown
+  breakdown     String?  // JSON — breakdown by category, platform, etc.
+
+  // Context
+  productId     String?
+  storeId       String?
+  agentId       String?
+
+  metadata      String?  // JSON — extensible
+
+  createdAt     DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  product   Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+}
+
+// ─── SUPPLIER PRICING — Historical supplier pricing data ───
+
+model SupplierPrice {
+  id          String   @id @default(cuid())
+  supplierId  String
+  productId   String?
+
+  // Pricing data
+  price       Float
+  currency    String   @default("USD")
+  minOrder    Int?     @default(1)
+  maxOrder    Int?
+  moqPrice    Float?   // price at minimum order quantity
+
+  // Shipping
+  shippingCost Float?
+  shippingMethod String?
+  estimatedDays Int?    // estimated delivery in days
+
+  // Timestamps
+  effectiveAt  DateTime @default(now())
+  expiresAt    DateTime? // when this price is no longer valid
+  recordedAt   DateTime @default(now())
+
+  supplier Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+}
+
+// ─── TREND SIGNAL — Raw trend signal data from sources ───
+
+model TrendSignal {
+  id              String   @id @default(cuid())
+  workspaceId     String
+  trendId         String?
+
+  // Signal source
+  source          String   // tiktok | meta_ads | google_trends | amazon_movers | ecommerce_signal
+  signalType      String   // hashtag | keyword | ad_spend | search_volume | sales_velocity | social_mention
+
+  // Signal data
+  keyword         String
+  value           Float    // raw signal value
+  previousValue   Float?   // previous period value for comparison
+  changePercent    Float?  // percentage change
+  volume          Int?     // raw volume if applicable
+
+  // Temporal
+  recordedAt      DateTime
+  interval        String   // hour | day | week
+
+  // Context
+  region          String?  // geographic region
+  demographic     String?  // target demographic
+  metadata        String?  // JSON — additional signal metadata
+
+  createdAt       DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  trend     Trend?    @relation(fields: [trendId], references: [id], onDelete: Cascade)
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 3 — COMMERCE INTEGRATION LAYER (Systems 10, 1, 6)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── INTEGRATION — External service connection hub ───
+
+model Integration {
+  id                String   @id @default(cuid())
+  workspaceId       String
+
+  // Provider identity
+  provider          String   // shopify | woocommerce | tiktok_shop | stripe | paypal | meta_ads | google_ads | klaviyo | discord | slack
+  name              String
+  description       String?
+
+  // Connection status
+  connectionStatus  String   @default("disconnected") // disconnected | connecting | connected | error | expired
+  lastConnectedAt   DateTime?
+  lastErrorAt       DateTime?
+  lastErrorMessage  String?
+
+  // Auth credentials (encrypted at application level)
+  apiKey            String?
+  apiSecret         String?
+  accessToken       String?
+  refreshToken      String?
+  tokenExpiresAt    DateTime?
+  scopes            String?  // space-separated scope list
+
+  // Configuration
+  config            String?  // JSON — provider-specific configuration
+  settings          String?  // JSON — user preferences
+
+  // Health
+  healthScore       Float?   @default(0)
+  healthStatus      String   @default("unknown") // healthy | degraded | error | unknown
+  lastHealthCheckAt DateTime?
+
+  // Usage
+  syncCount         Int      @default(0)
+  errorCount        Int      @default(0)
+  lastSyncAt        DateTime?
+
+  // Metadata
+  metadata          String?  // JSON — extensible metadata
+  tags              String?  // JSON array
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  workspace   Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  webhookEvents WebhookEvent[]
+}
+
+// ─── WEBHOOK EVENT — Processed webhook events from integrations ───
+
+model WebhookEvent {
+  id              String   @id @default(cuid())
+  workspaceId     String
+  integrationId   String?
+
+  // Event data
+  provider        String   // shopify | stripe | paypal | etc.
+  eventType       String   // order.created | product.updated | etc.
+  eventId         String?  // ID from the provider
+
+  // Payload
+  rawBody         String?  @db.Text // raw webhook payload
+  processedData   String?  @db.Text // JSON — normalized event data
+
+  // Processing
+  status          String   @default("received") // received | processing | processed | failed | ignored
+  processingError String?
+  processedAt     DateTime?
+
+  // Correlation
+  correlationId   String?
+
+  createdAt       DateTime @default(now())
+
+  workspace   Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  integration Integration? @relation(fields: [integrationId], references: [id], onDelete: SetNull)
+}
+
+// ─── EXECUTION POLICY — Autonomous execution mode configuration ───
+
+model ExecutionPolicy {
+  id              String   @id @default(cuid())
+  workspaceId     String
+
+  // Policy identity
+  name            String
+  description     String?
+  mode            String   @default("manual") // manual | assisted | autonomous
+
+  // Scope configuration
+  allowedActions  String?  // JSON — what actions are allowed
+  restrictedActions String? // JSON — what actions are blocked
+  resourceTypes   String?  // JSON — what resource types this applies to
+
+  // Approval rules
+  requiresApproval Boolean @default(true)
+  approvalRules   String?  // JSON — conditions requiring approval
+  autoApprovalLimit Int?   // max cost/value before approval needed
+
+  // Sandbox
+  sandboxProfile  String?  // restricted | standard | elevated | unrestricted
+  maxExecutionTimeMs Int?  @default(60000)
+
+  // Scheduling
+  activeHours     String?  // JSON — time windows for autonomous execution
+  maxActionsPerDay Int?    @default(100)
+  actionsToday    Int      @default(0)
+  lastResetDate   String?  // date of last daily counter reset
+
+  // Governance
+  requireAudit    Boolean  @default(true)
+  requireLogging  Boolean  @default(true)
+  rollbackEnabled Boolean  @default(true)
+
+  // Status
+  enabled         Boolean  @default(false)
+  status          String   @default("inactive") // inactive | active | suspended
+
+  // Metrics
+  executionCount  Int      @default(0)
+  approvalCount   Int      @default(0)
+  rejectionCount  Int      @default(0)
+  rollbackCount   Int      @default(0)
+  lastExecutedAt  DateTime?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 4 — AI CONTENT SYSTEMS (Systems 3, 4)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── PRODUCT PAGE — AI-generated product page with versioning ───
+
+model ProductPage {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  productId     String?
+
+  // Page content
+  title         String
+  description   String?  @db.Text
+  bulletPoints  String?  // JSON array of feature bullet points
+  seoTitle      String?
+  seoDescription String?
+  seoKeywords   String?  // JSON array
+
+  // Media
+  mainImageUrl  String?
+  galleryUrls   String?  // JSON array
+  videoUrl      String?
+
+  // AI generation metadata
+  generator     String?  // which AI system generated this
+  generationPrompt String? @db.Text
+  tone          String?  // professional | casual | luxury | playful
+  targetAudience String?
+
+  // Status
+  status        String   @default("draft") // draft | reviewed | published | archived
+  score         Float?   // quality score 0-100
+  version       Int      @default(1)
+
+  // Publishing
+  publishedAt   DateTime?
+  publishedUrl  String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  product   Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+}
+
+// ─── CAMPAIGN — Marketing/ad campaigns ───
+
+model Campaign {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  productId     String?
+
+  // Campaign identity
+  name          String
+  type          String   // ad | social | email | ugc | print
+  platform      String   // meta_ads | google_ads | tiktok | email | print | social
+  status        String   @default("draft") // draft | active | paused | completed | archived
+
+  // Budget
+  budget        Float?   // total campaign budget
+  dailyBudget   Float?
+  currency      String   @default("USD")
+
+  // Targeting
+  targetAudience String? // JSON — audience definition
+  targetLocation String? // JSON — location targeting
+  targetKeywords String? // JSON array
+
+  // Scheduling
+  startDate     DateTime?
+  endDate       DateTime?
+
+  // Metrics
+  impressions   Int?     @default(0)
+  clicks        Int?     @default(0)
+  conversions   Int?     @default(0)
+  spend         Float?   @default(0)
+  revenue       Float?   @default(0)
+  roas          Float?   // return on ad spend
+
+  // AI generation
+  generationPrompt String? @db.Text
+  creativeStrategy String? @db.Text
+
+  // Metadata
+  notes         String?  @db.Text
+  tags          String?  // JSON array
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  product   Product?   @relation(fields: [productId], references: [id], onDelete: SetNull)
+  assets    CreativeAsset[]
+}
+
+// ─── CREATIVE ASSET — Generated creative content ───
+
+model CreativeAsset {
+  id            String   @id @default(cuid())
+  campaignId    String
+  workspaceId   String
+
+  // Asset identity
+  type          String   // image | video | copy | script | social_post | ad_copy | ugc_script
+  format        String?  // png | jpg | mp4 | text | html
+  name          String
+  description   String?
+
+  // Content
+  content       String?  @db.Text // text content or URL to media
+  thumbnailUrl  String?
+  mediaUrl      String?
+
+  // AI generation
+  provider      String?  // openai | stability | midjourney | runway | elevenlabs
+  generationPrompt String? @db.Text
+  modelId       String?
+  parameters    String?  // JSON — generation parameters
+
+  // Status
+  status        String   @default("draft") // draft | generated | reviewed | approved | rejected | published
+  score         Float?   // quality score 0-100
+  version       Int      @default(1)
+
+  // AD-specific fields
+  headline      String?
+  primaryText   String?
+  callToAction  String?
+
+  // Publishing
+  publishedUrl  String?
+  publishedAt   DateTime?
+
+  // Analytics
+  impressions   Int?     @default(0)
+  clicks        Int?     @default(0)
+  ctr           Float?   // click-through rate
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 5 — COMPETITOR INTELLIGENCE (System 8)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── COMPETITOR — Tracked competitor brands ───
+
+model Competitor {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Competitor identity
+  name          String
+  domain        String?
+  platform      String?  // shopify | amazon | etsy | custom
+  platformUrl   String?
+  description   String?
+
+  // Business info
+  estimatedRevenue String?
+  employeeCount    String?
+  foundedYear     Int?
+  headquarters    String?
+
+  // Tracking
+  status        String   @default("tracking") // tracking | paused | archived
+  trackingSince DateTime?
+  lastCheckedAt DateTime?
+  checkFrequency String  @default("daily") // hourly | daily | weekly
+
+  // Market position
+  marketShare   Float?   // estimated percentage
+  pricePosition String?  // premium | mid_range | budget | varies
+  targetAudience String? // JSON
+
+  // AI analysis
+  aiSummary     String?  @db.Text
+  aiInsights    String?  // JSON
+  threatLevel   String?  @default("low") // low | medium | high | unknown
+
+  // Scores
+  overallScore  Float?   @default(0)
+  visibilityScore Float? @default(0)
+  pricingScore    Float? @default(0)
+  productScore    Float? @default(0)
+  adScore         Float? @default(0)
+
+  // Metadata
+  tags          String?  // JSON array
+  metadata      String?  // JSON — extensible
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  products  CompetitorProduct[]
+}
+
+// ─── COMPETITOR PRODUCT — Competitor product pricing & tracking ───
+
+model CompetitorProduct {
+  id              String   @id @default(cuid())
+  competitorId    String
+  workspaceId     String
+
+  // Product info
+  name            String
+  sku             String?
+  platformProductId String? // ID on competitor's platform
+  productUrl      String?
+  imageUrl        String?
+  category        String?
+  description     String?
+
+  // Pricing
+  currentPrice    Float?
+  originalPrice   Float?
+  currency        String   @default("USD")
+  discountPercent Float?
+  inStock         Boolean  @default(true)
+
+  // Sales estimates
+  estimatedSales  Int?     // estimated monthly sales
+  estimatedRevenue Float?  // estimated monthly revenue
+
+  // Ratings
+  rating          Float?   // 0-5
+  reviewCount     Int?
+
+  // Timelines
+  firstDetectedAt DateTime?
+  lastPriceChangeAt DateTime?
+  lastCheckedAt   DateTime?
+
+  // AI analysis
+  differentiator  String?  // what makes this product unique
+  aiNotes         String?  @db.Text
+
+  created_at      DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  competitor Competitor @relation(fields: [competitorId], references: [id], onDelete: Cascade)
+  workspace Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([competitorId, platformProductId])
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 6 — REVENUE OPERATIONS (System 9)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── REVENUE METRIC — Aggregated revenue & operational metrics ───
+
+model RevenueMetric {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Metric identity
+  metricType    String   // revenue | gross_margin | net_margin | profit | avg_order_value | customer_acquisition_cost | lifetime_value | roas | operational_efficiency | automation_rate | fulfillment_health | agent_efficiency | trend_performance | supplier_performance
+  period        String   // daily | weekly | monthly | quarterly | yearly
+  periodStart   DateTime
+  periodEnd     DateTime
+
+  // Values
+  value         Float
+  target        Float?   // target/goal value
+  previousValue Float?   // value for previous period
+  changePercent Float?   // percentage change from previous
+
+  // Breakdowns
+  byChannel     String?  // JSON — breakdown by sales channel
+  byProduct     String?  // JSON — breakdown by product/category
+  byPlatform    String?  // JSON — breakdown by platform
+
+  // Context
+  currency      String   @default("USD")
+  confidence    Float?   @default(1.0) // data confidence 0-1
+  source        String?  // computed | manual | imported
+
+  // Metadata
+  metadata      String?  // JSON — extensible
+  notes         String?
+
+  createdAt     DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, metricType, period, periodStart])
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 7 — AGI MARKETPLACE (System 1)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── MARKETPLACE LISTING — Items for sale in the AGI Marketplace ───
+
+model MarketplaceListing {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  creatorId     String?
+
+  // Listing identity
+  name          String
+  description   String?  @db.Text
+  shortDescription String?
+  category      String   // ai_agent | automation_template | workflow | store_template | research_pack | trend_pack | creative_pack | operational_tool
+  type          String   // free | paid | subscription
+
+  // Pricing
+  price         Float?   @default(0)
+  currency      String   @default("USD")
+  salePrice     Float?
+  revenueShare  Float?   @default(0.8) // creator's share (0-1)
+
+  // Media
+  iconUrl       String?
+  imageUrls     String?  // JSON array
+  demoUrl       String?
+  documentationUrl String?
+
+  // Content (the actual item payload)
+  contentId     String?  // reference to the underlying asset (workflow, agent, etc.)
+  contentType   String?  // workflow | agent | template | pack
+  contentData   String?  @db.Text // JSON — serialized content
+
+  // Versions
+  version       String   @default("1.0.0")
+  latestVersion String   @default("1.0.0")
+  changelog     String?  @db.Text
+
+  // Marketplace status
+  status        String   @default("draft") // draft | pending_review | published | rejected | archived
+  featured      Boolean  @default(false)
+  verified      Boolean  @default(false)
+
+  // Metrics
+  downloadCount Int      @default(0)
+  viewCount     Int      @default(0)
+  averageRating Float?   @default(0)
+  reviewCount   Int      @default(0)
+
+  // Tags & discovery
+  tags          String?  // JSON array
+  requirements  String?  // JSON — compatibility requirements
+  metadata      String?  // JSON — extensible
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  publishedAt   DateTime?
+
+  workspace Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  creator   MarketplaceCreator? @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+  reviews   MarketplaceReview[]
+  downloads MarketplaceDownload[]
+}
+
+// ─── MARKETPLACE REVIEW — Ratings/reviews for listings ───
+
+model MarketplaceReview {
+  id            String   @id @default(cuid())
+  listingId     String
+  workspaceId   String
+  userId        String?
+
+  // Review content
+  rating        Int      // 1-5
+  title         String?
+  content       String?  @db.Text
+  pros          String?  // JSON array
+  cons          String?  // JSON array
+
+  // Verification
+  verified      Boolean  @default(false) // purchased/downloaded
+  helpfulCount  Int      @default(0)
+  status        String   @default("published") // published | pending | flagged | removed
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  listing  MarketplaceListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  workspace Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── MARKETPLACE DOWNLOAD — Track downloads/installs ───
+
+model MarketplaceDownload {
+  id            String   @id @default(cuid())
+  listingId     String
+  workspaceId   String
+
+  // Download metadata
+  version       String
+  ipAddress     String?
+  userAgent     String?
+
+  // Status
+  status        String   @default("completed") // started | completed | failed
+  installed     Boolean  @default(false)
+  installedAt   DateTime?
+
+  createdAt     DateTime @default(now())
+
+  listing  MarketplaceListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  workspace Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── MARKETPLACE CREATOR — Creator/publisher profiles ───
+
+model MarketplaceCreator {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Profile info
+  name          String
+  handle        String?  @unique
+  bio           String?  @db.Text
+  avatarUrl     String?
+  websiteUrl    String?
+
+  // Verification
+  verified      Boolean  @default(false)
+  verificationType String? // individual | business | team
+
+  // Metrics
+  totalListings Int      @default(0)
+  totalDownloads Int     @default(0)
+  averageRating Float?   @default(0)
+  totalRevenue  Float?   @default(0)
+
+  // Payout
+  payoutMethod  String?  // stripe | paypal | bank
+  payoutAccount String?
+  payoutEmail   String?
+
+  // Status
+  status        String   @default("active") // active | suspended | banned
+
+  metadata      String?  // JSON — extensible
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  listings  MarketplaceListing[]
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 8 — AGI APP STORE / PLUGIN ECOSYSTEM (System 2)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── PLUGIN — Installable plugin/app module ───
+
+model Plugin {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Plugin identity
+  name          String
+  description   String?  @db.Text
+  type          String   // integration | workflow_extension | runtime_plugin | automation_pack | ai_toolkit | custom
+  provider      String?  // the plugin provider/author
+
+  // Entry points
+  entryPoint    String?  // main module entry
+  apiVersion    String   @default("1.0")
+  dependencies  String?  // JSON — plugin dependencies
+
+  // Permissions
+  permissions   String?  // JSON — requested permissions
+  permissionLevel String @default("sandbox") // sandbox | restricted | standard | elevated
+
+  // Sandbox config
+  sandboxConfig String?  // JSON — sandbox execution config
+  maxMemory     Int?     @default(256) // MB
+  maxCpu        Float?   @default(0.5) // cores
+  networkAccess Boolean  @default(false)
+
+  // Status
+  enabled       Boolean  @default(false)
+  status        String   @default("inactive") // inactive | active | error | disabled
+
+  // Health
+  healthScore   Float?   @default(0)
+  lastHealthCheckAt DateTime?
+  lastError     String?
+
+  // Metrics
+  executionCount Int     @default(0)
+  errorCount    Int     @default(0)
+  averageLatencyMs Int? @default(0)
+
+  // Versioning
+  version       String   @default("1.0.0")
+  latestVersion String
+  updateAvailable Boolean @default(false)
+
+  config        String?  // JSON — user configuration
+  metadata      String?  // JSON — extensible
+  tags          String?  // JSON array
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace     Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  installations PluginInstallation[]
+}
+
+// ─── PLUGIN INSTALLATION — Track plugin installs across workspaces ───
+
+model PluginInstallation {
+  id            String   @id @default(cuid())
+  pluginId      String
+  workspaceId   String
+
+  // Installation config
+  config        String?  // JSON — per-workspace config
+  enabled       Boolean  @default(true)
+  version       String
+
+  // Status
+  status        String   @default("installed") // installed | active | error | uninstalled
+  lastUsedAt    DateTime?
+  errorMessage  String?
+
+  installedAt   DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  plugin    Plugin    @relation(fields: [pluginId], references: [id], onDelete: Cascade)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([pluginId, workspaceId])
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 9 — CREATOR ECONOMY (System 3)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── CREATOR PROFILE — Extended creator/builder profiles ───
+
+model CreatorProfile {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  userId        String?
+
+  // Identity
+  displayName   String
+  handle        String?  @unique
+  bio           String?  @db.Text
+  avatarUrl     String?
+  coverUrl      String?
+
+  // Verification
+  verified      Boolean  @default(false)
+  verificationLevel String? // basic | advanced | enterprise
+
+  // Social
+  websiteUrl    String?
+  socialLinks   String?  // JSON — social media links
+
+  // Creator type
+  creatorType   String   // individual | agency | brand | developer
+  specialties   String?  // JSON array
+
+  // Analytics
+  totalProducts  Int     @default(0)
+  totalSales     Int     @default(0)
+  totalRevenue   Float?  @default(0)
+  averageRating  Float?  @default(0)
+
+  // Stripe connect
+  stripeAccountId String?
+  stripeOnboardingComplete Boolean @default(false)
+
+  // Payout preferences
+  payoutMethod   String? // stripe | paypal | bank
+  payoutSchedule String? // manual | weekly | biweekly | monthly
+  minimumPayout  Float?  @default(0)
+
+  // Status
+  status         String   @default("active") // active | suspended | deactivated
+
+  metadata       String?  // JSON — extensible
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  workspace Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  storefronts CreatorStorefront[]
+  payouts    CreatorPayout[]
+  products   DigitalProduct[]
+}
+
+// ─── CREATOR STOREFRONT — Public storefront ───
+
+model CreatorStorefront {
+  id            String   @id @default(cuid())
+  profileId     String
+  workspaceId   String
+
+  // Storefront identity
+  name          String
+  slug          String?  @unique
+  description   String?  @db.Text
+  tagline       String?
+
+  // Branding
+  logoUrl       String?
+  bannerUrl     String?
+  accentColor   String?  // hex color
+  theme         String?  // JSON — storefront theme
+
+  // SEO
+  seoTitle      String?
+  seoDescription String?
+
+  // Configuration
+  featuredProductIds String? // JSON array
+  categories    String?  // JSON array
+  customDomain  String?
+
+  // Status
+  published     Boolean  @default(false)
+  status        String   @default("draft") // draft | published | archived
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  profile  CreatorProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  workspace Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── CREATOR PAYOUT — Payment tracking for creators ───
+
+model CreatorPayout {
+  id            String   @id @default(cuid())
+  profileId     String
+  workspaceId   String
+
+  // Payout details
+  amount        Float
+  currency      String   @default("USD")
+  fee           Float?   @default(0)
+  netAmount     Float
+
+  // Source
+  sourceType    String   // product_sale | affiliate | subscription | tip
+  sourceIds     String?  // JSON array of source IDs
+
+  // Status
+  status        String   @default("pending") // pending | processing | completed | failed | cancelled
+
+  // Payment processor
+  processor     String?  // stripe | paypal
+  processorPayoutId String?
+  payoutMethod  String?  // stripe | paypal | bank
+  payoutAccount String?
+
+  // Timing
+  periodStart   DateTime?
+  periodEnd     DateTime?
+  paidAt        DateTime?
+
+  notes         String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  profile  CreatorProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  workspace Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── AFFILIATE LINK — Affiliate / referral tracking ───
+
+model AffiliateLink {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  creatorId     String?
+
+  // Link identity
+  code          String   @unique // unique short code
+  name          String?
+  description   String?
+
+  // Target
+  targetType    String   // listing | storefront | product | workspace
+  targetId      String
+  targetUrl     String?
+
+  // Commission
+  commissionRate Float?  @default(0.1) // 10% default
+  commissionType String  // percentage | flat
+  flatCommission Float?  // fixed commission amount
+
+  // Settings
+  maxUses       Int?     // null = unlimited
+  expiresAt     DateTime?
+  autoApprove   Boolean  @default(true)
+
+  // Metrics
+  clickCount    Int      @default(0)
+  conversionCount Int    @default(0)
+  revenueGenerated Float? @default(0)
+
+  // Status
+  status        String   @default("active") // active | paused | expired | disabled
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, code])
+}
+
+// ─── DIGITAL PRODUCT — Sellable digital items ───
+
+model DigitalProduct {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  creatorId     String?
+  profileId     String?
+
+  // Product identity
+  name          String
+  description   String?  @db.Text
+  type          String   // automation_pack | workflow | template | ai_model | dataset | guide | software
+
+  // Pricing
+  price         Float
+  currency      String   @default("USD")
+  salePrice     Float?
+  revenueShare  Float?   @default(0.8)
+
+  // Media
+  thumbnailUrl  String?
+  previewUrls   String?  // JSON array
+  fileUrl       String?
+  fileSize      Int?     // bytes
+
+  // Delivery
+  downloadLimit Int?     // per purchase
+  licenseType   String?  // single | multi | enterprise | open
+  deliveryMethod String? // download | api | embed
+
+  // Status
+  status        String   @default("draft") // draft | published | archived
+
+  // Metrics
+  salesCount    Int      @default(0)
+  totalRevenue  Float?   @default(0)
+  averageRating Float?   @default(0)
+
+  metadata      String?  // JSON — extensible
+  tags          String?  // JSON array
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  creator   CreatorProfile? @relation(fields: [profileId], references: [id], onDelete: SetNull)
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 10 — AGI BUSINESS COPILOT (System 4)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── COPILOT CONVERSATION — Business copilot conversation threads ───
+
+model CopilotConversation {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  userId        String?
+
+  // Conversation metadata
+  title         String?
+  topic         String?  // business_planning | product_recommendation | operational_guidance | optimization | supplier | scaling | revenue | automation
+
+  // Context
+  contextIds    String?  // JSON — referenced resource IDs
+  metadata      String?  // JSON — conversation metadata
+
+  // Messages stored as JSON array
+  messages      String?  @db.Text // JSON array of message objects
+
+  // Status
+  status        String   @default("active") // active | archived | resolved
+
+  // Metrics
+  messageCount  Int      @default(0)
+  tokenCount    Int      @default(0)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  lastMessageAt DateTime?
+
+  workspace Workspace              @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  recommendations CopilotRecommendation[]
+}
+
+// ─── COPILOT RECOMMENDATION — Recorded copilot suggestions ───
+
+model CopilotRecommendation {
+  id              String   @id @default(cuid())
+  conversationId  String
+  workspaceId     String
+
+  // Recommendation data
+  type            String   // product | supplier | trend | price | automation | scaling | optimization | revenue | custom
+  title           String
+  description     String?  @db.Text
+  confidence      Float?   // 0-1 confidence score
+
+  // Supporting data
+  reasoning       String?  @db.Text
+  dataPoints      String?  // JSON — supporting evidence
+  alternatives    String?  // JSON array
+
+  // Actionability
+  actionType      String?  // execute | review | schedule | ignore
+  actionPayload   String?  // JSON — payload for execution
+  executed        Boolean  @default(false)
+  executedAt      DateTime?
+  executionResult String?  // success | failed | pending
+
+  // Feedback
+  feedbackRating  Int?     // 1-5
+  feedbackComment String?
+  applied         Boolean  @default(false)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  conversation CopilotConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  workspace    Workspace           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 11 — GROWTH AUTOMATION ENGINE (System 5)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── GROWTH CAMPAIGN — Multi-channel growth automation campaigns ───
+
+model GrowthCampaign {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Campaign identity
+  name          String
+  description   String?  @db.Text
+  type          String   // email | social | ads | multi_channel | product_launch | content
+
+  // Channels
+  channels      String?  // JSON array — activated channels
+
+  // Scheduling
+  status        String   @default("draft") // draft | scheduled | active | paused | completed | archived
+  startDate     DateTime?
+  endDate       DateTime?
+  timezone      String   @default("UTC")
+
+  // Triggers
+  triggerType   String?  // manual | scheduled | trend_based | event_based
+  triggerConfig String?  // JSON — trigger configuration
+  triggeredAt   DateTime?
+
+  // Targeting
+  targetAudience String? // JSON
+  segments      String?  // JSON array
+
+  // Budget
+  budget        Float?   @default(0)
+  dailyBudget   Float?
+  currency      String   @default("USD")
+
+  // Content
+  contentIds    String?  // JSON array of content/article IDs
+  templateIds   String?  // JSON array of email template IDs
+
+  // Metrics
+  impressions   Int?     @default(0)
+  clicks        Int?     @default(0)
+  conversions   Int?     @default(0)
+  revenue       Float?   @default(0)
+  spend         Float?   @default(0)
+  roi           Float?   // return on investment
+
+  // Automation rules
+  autoOptimize  Boolean  @default(false)
+  optimizationRules String? // JSON
+
+  config        String?  // JSON — campaign config
+  notes         String?  @db.Text
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── EMAIL TEMPLATE — Email templates for automation ───
+
+model EmailTemplate {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Template identity
+  name          String
+  subject       String
+  previewText   String?
+  bodyHtml      String?  @db.Text
+  bodyText      String?  @db.Text
+
+  // Design
+  design        String?  @db.Text // JSON — editor state
+  category      String?  // transactional | marketing | notification | newsletter
+
+  // Variables
+  variables     String?  // JSON array of available variables
+
+  // Testing
+  testSentAt    DateTime?
+  lastTestResult String?
+
+  // Metrics
+  sendCount     Int      @default(0)
+  openRate      Float?
+  clickRate     Float?
+  bounceRate    Float?
+
+  // Status
+  status        String   @default("draft") // draft | active | archived
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── CONTENT SCHEDULE — Scheduled content publishing ───
+
+model ContentSchedule {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Schedule identity
+  name          String
+  description   String?
+
+  // Content reference
+  contentId     String   // ID of the content to publish
+  contentType   String   // article | social_post | email | ad
+
+  // Schedule
+  scheduledAt   DateTime
+  publishedAt   DateTime?
+  timezone      String   @default("UTC")
+  recurrence    String?  // none | daily | weekly | monthly | custom
+  cronExpression String? // for custom recurrence
+
+  // Channels
+  channels      String?  // JSON array — where to publish
+
+  // Status
+  status        String   @default("scheduled") // scheduled | publishing | published | failed | cancelled
+  error         String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 12 — AI CONTENT OPERATIONS (System 6)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── CONTENT ARTICLE — Blog/SEO/content articles ───
+
+model ContentArticle {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Article identity
+  title         String
+  slug          String?
+  description   String?  @db.Text
+  content       String?  @db.Text // Markdown/HTML content
+  excerpt       String?  @db.Text
+
+  // Type & category
+  type          String   // blog | seo_article | product_content | social_post | guide | documentation
+  category      String?
+  tags          String?  // JSON array
+
+  // SEO
+  seoTitle      String?
+  seoDescription String?
+  seoKeywords   String?  // JSON array
+  canonicalUrl  String?
+
+  // Media
+  featuredImageUrl String?
+  imageUrls     String?  // JSON array
+
+  // Author
+  authorId      String?  // user or agent ID
+  authorType    String?  // user | agent | ai
+
+  // AI generation
+  generationPrompt String? @db.Text
+  aiModel       String?
+  wordCount     Int?     @default(0)
+
+  // Publishing
+  status        String   @default("draft") // draft | review | approved | scheduled | published | archived
+  publishedAt   DateTime?
+  publishedUrl  String?
+
+  // Metrics
+  viewCount     Int?     @default(0)
+  readTime      Int?     // minutes
+  score         Float?   // quality score
+
+  // Versioning
+  version       Int      @default(1)
+  sourceArticleId String? // for version chain
+
+  metadata      String?  // JSON — extensible
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  versions  ContentVersion[]
+}
+
+// ─── CONTENT VERSION — Article version history ───
+
+model ContentVersion {
+  id            String   @id @default(cuid())
+  articleId     String
+  workspaceId   String
+
+  // Version data
+  versionNumber Int
+  title         String
+  content       String?  @db.Text
+  description   String?
+
+  // Change tracking
+  changeSummary String?
+  editedBy      String?  // user or agent ID
+  editorType    String?  // user | agent | ai
+
+  // Status
+  status        String   @default("saved") // saved | reviewed | approved | published
+
+  createdAt     DateTime @default(now())
+
+  article  ContentArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  workspace Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([articleId, versionNumber])
+}
+
+// ─── PUBLISHING PIPELINE — Content publishing workflow ───
+
+model PublishingPipeline {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Pipeline identity
+  name          String
+  description   String?
+  type          String   // blog | social | email | multi_channel
+
+  // Stages (JSON array of stage definitions)
+  stages        String?  @db.Text // JSON — pipeline stages
+
+  // Current state
+  currentStage  String?
+  status        String   @default("idle") // idle | running | paused | completed | error
+
+  // Content items in pipeline
+  contentIds    String?  // JSON array
+
+  // Approval config
+  requiresApproval Boolean @default(false)
+  approverIds    String? // JSON array
+
+  // Automation
+  autoPublish   Boolean  @default(false)
+  autoPublishDelay Int?  // hours delay before auto-publish
+
+  // Schedule
+  scheduleType  String?  // immediate | scheduled | manual
+  scheduledAt   DateTime?
+  lastRunAt     DateTime?
+
+  config        String?  // JSON — pipeline config
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 13 — OPERATIONAL REVENUE ENGINE (System 7)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── SUBSCRIPTION — Customer subscriptions ───
+
+model Subscription {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Subscription identity
+  planId        String   // stripe price ID or internal plan ID
+  tier          String   // free | starter | pro | enterprise | custom
+  status        String   @default("active") // active | trialing | past_due | cancelled | expired | paused
+
+  // Billing
+  billingPeriod String   // monthly | yearly | custom
+  amount        Float
+  currency      String   @default("USD")
+
+  // Stripe
+  stripeSubscriptionId String?
+  stripeCustomerId     String?
+  stripePriceId        String?
+
+  // Timing
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  trialEndsAt        DateTime?
+  cancelledAt        DateTime?
+  cancelAtPeriodEnd  Boolean  @default(false)
+
+  // Credits & usage
+  includedCredits Int?    @default(0)
+  usedCredits     Int?    @default(0)
+  overageRate     Float?  // per-credit overage cost
+
+  // Features
+  features        String? // JSON — enabled feature flags
+  limits          String? // JSON — usage limits
+
+  // Metadata
+  metadata        String? // JSON — extensible
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  invoices  Invoice[]
+}
+
+// ─── INVOICE — Billing invoices ───
+
+model Invoice {
+  id            String   @id @default(cuid())
+  subscriptionId String?
+  workspaceId   String
+
+  // Invoice number & identity
+  invoiceNumber String?  @unique
+  description   String?
+
+  // Financial
+  amount        Float
+  currency      String   @default("USD")
+  tax           Float?   @default(0)
+  total         Float
+  paidAmount    Float?   @default(0)
+  balanceDue    Float?
+
+  // Status
+  status        String   @default("pending") // draft | pending | paid | overdue | void | cancelled | refunded
+
+  // Stripe
+  stripeInvoiceId String?
+  stripePaymentIntentId String?
+  hostedInvoiceUrl     String?
+  invoicePdfUrl        String?
+
+  // Timing
+  dueDate       DateTime?
+  paidAt        DateTime?
+  voidedAt      DateTime?
+
+  // Line items
+  lineItems     String?  @db.Text // JSON array
+
+  // Metadata
+  metadata      String?  // JSON
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── CREDIT ACCOUNT — Credit/usage metering ───
+
+model CreditAccount {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Balance
+  balance       Int      @default(0)
+  lifetimeCredits Int    @default(0) // total credits ever purchased
+  usedCredits    Int     @default(0)
+
+  // Auto-refill
+  autoRefill    Boolean  @default(false)
+  refillThreshold Int?  // refill when balance drops below this
+  refillAmount  Int?     // amount to refill
+
+  // Limits
+  dailyLimit    Int?
+  monthlyLimit  Int?
+  rateLimit     Int?     // requests per minute
+
+  // Stripe
+  stripeCustomerId String?
+  stripePaymentMethodId String?
+
+  metadata      String?  // JSON
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  usage     UsageRecord[]
+}
+
+// ─── USAGE RECORD — Individual credit usage events ───
+
+model UsageRecord {
+  id            String   @id @default(cuid())
+  accountId     String
+  workspaceId   String
+
+  // Usage details
+  credits       Int      // credits consumed
+  description   String?
+  type          String   // api_call | runtime_execution | workflow_run | content_generation | plugin_execution | storage
+
+  // Resource
+  resourceType  String?
+  resourceId    String?
+
+  // Metering
+  meteredAt     DateTime @default(now())
+  periodStart   DateTime?
+  periodEnd     DateTime?
+
+  // Billing
+  billed        Boolean  @default(false)
+  invoiceId     String?
+
+  metadata      String?  // JSON
+
+  createdAt     DateTime @default(now())
+
+  account   CreditAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  workspace Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── COUPON — Discount coupons & promotions ───
+
+model Coupon {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Coupon identity
+  code          String   @unique
+  description   String?
+
+  // Discount
+  discountType  String   // percentage | fixed_amount | free_months
+  discountValue Float    // percentage (0-100) or fixed amount
+  maxDiscount   Float?   // max discount for percentage coupons
+
+  // Usage
+  maxUses       Int?
+  currentUses   Int      @default(0)
+  maxUsesPerUser Int?    @default(1)
+
+  // Eligibility
+  minAmount     Float?   // minimum order/sub amount
+  applicablePlans String? // JSON array of plan IDs
+  firstTimeOnly Boolean  @default(false)
+
+  // Timing
+  startsAt      DateTime?
+  expiresAt     DateTime?
+  isActive      Boolean  @default(true)
+
+  // Metadata
+  metadata      String?  // JSON
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── REFERRAL — Referral tracking ───
+
+model Referral {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  referrerId    String?  // workspace ID of referrer
+
+  // Referral code
+  code          String   @unique
+
+  // Referrer reward
+  referrerReward  Float?
+  referrerRewardType String? // credit | discount | months_free
+
+  // Referee reward
+  refereeReward   Float?
+  refereeRewardType String? // credit | discount
+
+  // Tracking
+  clicks        Int      @default(0)
+  signups       Int      @default(0)
+  conversions   Int      @default(0)
+  revenue       Float?   @default(0)
+
+  // Status
+  status        String   @default("active") // active | expired | disabled
+  expiresAt     DateTime?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 14 — MULTI-TENANT WORKSPACE SYSTEM (System 8)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── ORGANIZATION — Top-level organization entity ───
+
+model Organization {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String?  @unique
+  description   String?
+  logoUrl       String?
+  websiteUrl    String?
+
+  // Billing
+  stripeCustomerId String?
+  billingEmail  String?
+  billingAddress String?
+  taxId         String?
+
+  // Settings
+  settings      String?  // JSON — org-wide settings
+  features      String?  // JSON — enabled feature flags
+
+  // Status
+  status        String   @default("active") // active | suspended | archived
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  members  OrganizationMember[]
+  teams    Team[]
+  workspaces Workspace[]
+}
+
+// ─── ORGANIZATION MEMBER — User membership in an organization ───
+
+model OrganizationMember {
+  id              String   @id @default(cuid())
+  organizationId  String
+  userId          String
+
+  // Membership
+  role            String   @default("member") // owner | admin | member | viewer
+  title           String?  // job title within org
+  status          String   @default("active") // active | invited | suspended | removed
+
+  // Permissions
+  permissions     String?  // JSON — additional permissions
+
+  // Invitation tracking
+  invitedBy       String?
+  invitedAt       DateTime?
+  joinedAt        DateTime?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+}
+
+// ─── TEAM — Teams within an organization ───
+
+model Team {
+  id              String   @id @default(cuid())
+  organizationId  String
+  name            String
+  description     String?
+
+  // Team type
+  type            String   @default("functional") // functional | project | cross_functional
+
+  // Lead
+  leadUserId      String?
+
+  // Settings
+  settings        String?  // JSON
+
+  // Status
+  status          String   @default("active") // active | archived
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  members      TeamMember[]
+}
+
+// ─── TEAM MEMBER — Team membership ───
+
+model TeamMember {
+  id              String   @id @default(cuid())
+  teamId          String
+  userId          String
+  role            String   @default("member") // lead | member
+
+  createdAt       DateTime @default(now())
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, userId])
+}
+
+// ─── WORKSPACE ROLE — Role definitions for workspace access ───
+
+model WorkspaceRole {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  userId        String
+  organizationId String?
+
+  // Role
+  role          String   // owner | admin | operator | analyst | viewer
+  permissions   String?  // JSON — granular permissions
+
+  // Scope
+  scope         String   // user | team | organization
+  scopedId      String?  // team or org ID if scoped
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace    Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+
+  @@unique([workspaceId, userId])
+}
+
+// Update Workspace to include organization relation
+// Add after existing workspace model
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 15 — AGI LEARNING & FEEDBACK LOOP (System 9)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── LEARNING RECORD — Execution outcome tracking ───
+
+model LearningRecord {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // What was executed
+  executionId   String?
+  workflowId    String?
+  agentId       String?
+  actionType    String   // execution | recommendation | workflow | automation | decision
+  actionId      String   // ID of the action
+
+  // Outcome
+  outcome       String   // success | failure | partial | unknown
+  outcomeScore  Float?   // 0-1 success score
+  durationMs    Int?
+  errorType     String?
+  errorMessage  String?
+
+  // Context
+  context       String?  @db.Text // JSON — full context snapshot
+  inputData     String?  @db.Text // JSON — input data
+  outputData    String?  @db.Text // JSON — output/result
+
+  // Learning signals
+  signals       String?  // JSON — extracted signals
+  lessons       String?  @db.Text // JSON — learned lessons
+  patterns      String?  // JSON — detected patterns
+
+  // Feedback integration
+  feedbackId    String?  // link to feedback
+  applied       Boolean  @default(false)
+  appliedAt     DateTime?
+
+  // Status
+  status        String   @default("recorded") // recorded | analyzed | applied | archived
+
+  metadata      String?  // JSON
+
+  createdAt     DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── FEEDBACK RECORD — Explicit feedback on recommendations/actions ───
+
+model FeedbackRecord {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Source
+  sourceType    String   // recommendation | execution | workflow | automation | content
+  sourceId      String
+
+  // Feedback
+  rating        Int?     // 1-5
+  category      String?  // helpful | accurate | relevant | timely | custom
+  sentiment     String?  // positive | neutral | negative
+  comment       String?  @db.Text
+
+  // Behavioral signals
+  applied       Boolean  @default(false)
+  dwellTimeMs   Int?     // time spent reviewing
+  clicked       Boolean  @default(false)
+  shared        Boolean  @default(false)
+
+  // Agent improvement
+  improvementAreas String? // JSON — areas for improvement
+  confidenceDelta  Float?  // change in confidence after feedback
+
+  metadata      String?  // JSON
+
+  createdAt     DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── LEARNING ADAPTATION — Operational improvements from learning ───
+
+model LearningAdaptation {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Adaptation identity
+  name          String
+  description   String?  @db.Text
+  type          String   // workflow_optimization | prompt_tuning | routing_change | threshold_adjustment | automation_change | agent_behavior
+
+  // Source learning
+  sourceRecordId String? // link to LearningRecord
+  sourceFeedbackId String? // link to FeedbackRecord
+
+  // Change details
+  previousConfig String? @db.Text // JSON — before
+  newConfig      String? @db.Text // JSON — after
+  changeRationale String? @db.Text
+
+  // Impact
+  impactScore    Float?   // measured improvement 0-1
+  impactMetrics  String?  // JSON — quantitative impact
+  rollbackCount  Int      @default(0)
+
+  // Status
+  status         String   @default("proposed") // proposed | tested | applied | reverted | archived
+  appliedAt      DateTime?
+  revertedAt     DateTime?
+
+  // Governance
+  requiresApproval Boolean @default(false)
+  approvedBy      String?
+  approvedAt      DateTime?
+
+  metadata       String?  // JSON
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── TREND ACCURACY — Scoring trend prediction accuracy ───
+
+model TrendAccuracy {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  trendId       String?
+
+  // Prediction
+  predictedDirection String // up | down | stable
+  predictedMagnitude Float? // predicted change %
+  predictedTimeframe String? // short_term | medium_term | long_term
+
+  // Actual outcome
+  actualDirection  String? // up | down | stable
+  actualMagnitude  Float?  // actual change %
+
+  // Accuracy
+  accuracyScore    Float?  // 0-1 accuracy
+  wasCorrect       Boolean?
+  errorMargin      Float?  // absolute error
+
+  // Source
+  source           String? // ai_prediction | model | analyst
+  signalId         String? // link to trend signal
+
+  // Timing
+  predictedAt      DateTime?
+  actualAt         DateTime?
+
+  metadata         String? // JSON
+
+  createdAt        DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHASE 16 — GLOBAL OPERATIONAL COMMAND CLOUD (System 10)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── RUNTIME NODE — Distributed runtime execution node ───
+
+model RuntimeNode {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  clusterId     String?
+
+  // Node identity
+  name          String
+  type          String   // primary | secondary | worker | edge
+  region        String?  // us-east | eu-west | ap-southeast | etc.
+  provider      String?  // aws | gcp | azure | self_hosted | edge
+
+  // Connection
+  endpoint      String?
+  apiKey        String?
+  apiVersion    String?
+
+  // Capabilities
+  capabilities  String?  // JSON — what this node can run
+  maxConcurrency Int?    @default(10)
+  currentLoad   Int?     @default(0)
+
+  // Health
+  status        String   @default("offline") // online | offline | degraded | draining | maintenance
+  healthScore   Float?   @default(0)
+  lastHeartbeat DateTime?
+  lastHealthCheckAt DateTime?
+
+  // Performance
+  averageLatencyMs Int? @default(0)
+  errorRate     Float?  @default(0)
+  executionCount Int    @default(0)
+  failoverCount Int     @default(0)
+
+  // Config
+  config        String?  // JSON — node-specific config
+  metadata      String?  // JSON
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  cluster   RuntimeCluster? @relation(fields: [clusterId], references: [id], onDelete: SetNull)
+}
+
+// ─── RUNTIME CLUSTER — Group of runtime nodes ───
+
+model RuntimeCluster {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Cluster identity
+  name          String
+  description   String?
+  type          String   // kubernetes | docker_swarm | nomad | custom
+
+  // Configuration
+  config        String?  // JSON — cluster config
+  strategy      String   @default("round_robin") // round_robin | least_load | priority | failover | custom
+
+  // Health
+  status        String   @default("active") // active | degraded | offline
+  healthScore   Float?   @default(0)
+  totalNodes    Int      @default(0)
+  activeNodes   Int      @default(0)
+
+  // Metrics
+  totalExecutions Int    @default(0)
+  failedExecutions Int   @default(0)
+  averageLatencyMs Int?  @default(0)
+
+  // Auto-scaling
+  autoScaling   Boolean  @default(false)
+  minNodes      Int?     @default(1)
+  maxNodes      Int?     @default(10)
+  targetCpuUtilization Float? // 0-1 target CPU
+
+  metadata      String?  // JSON
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  nodes     RuntimeNode[]
+}
+
+// ─── EXECUTION ROUTE — Multi-provider execution routing rules ───
+
+model ExecutionRoute {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Route identity
+  name          String
+  description   String?
+  type          String   // primary | fallback | load_balanced | priority | conditional
+
+  // Source
+  sourceType    String?  // request_type | agent_type | workflow | model | latency
+  sourceValue   String?  // value to match
+
+  // Target (where to route)
+  targetType    String   // provider | node | cluster | custom
+  targetId      String
+
+  // Priority
+  priority      Int      @default(0)
+  weight        Int?     @default(1) // for load balancing
+
+  // Conditions
+  conditions    String?  // JSON — routing conditions
+  fallbackRouteId String? // when this route fails
+
+  // Config
+  config        String?  // JSON
+
+  // Status
+  enabled       Boolean  @default(true)
+  status        String   @default("active") // active | paused | error
+
+  // Metrics
+  executionCount Int     @default(0)
+  successCount  Int      @default(0)
+  failoverCount Int      @default(0)
+  averageLatencyMs Int?  @default(0)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── FAILOVER CONFIG — Operational failover configuration ───
+
+model FailoverConfig {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Config identity
+  name          String
+  description   String?
+  type          String   // provider | node | cluster | region | global
+
+  // Primary & backup
+  primaryId     String   // ID of primary resource
+  backupIds     String?  // JSON array of backup resource IDs
+  currentActive String   // currently active resource ID
+
+  // Triggers
+  failoverTriggers String? // JSON — what triggers a failover
+  healthThreshold  Float?  @default(50) // health score threshold
+  latencyThreshold Int?    @default(30000) // ms
+  errorRateThreshold Float? @default(0.2) // 20%
+
+  // Behavior
+  autoFailover  Boolean  @default(true)
+  autoRecovery  Boolean  @default(true)
+  cooldownMs    Int?     @default(300000) // 5 min before auto-recovery
+
+  // History
+  failoverCount Int      @default(0)
+  lastFailoverAt DateTime?
+  lastRecoveryAt DateTime?
+
+  // Status
+  enabled       Boolean  @default(true)
+  status        String   @default("active") // active | failing_over | recovering | paused
+
+  config        String?  // JSON — additional config
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+// ─── COORDINATION COMMAND — AGI coordination commands ───
+
+model CoordinationCommand {
+  id            String   @id @default(cuid())
+  workspaceId   String
+
+  // Command identity
+  command       String   // scale_up | scale_down | failover | recover | route_update | rebalance | maintenance
+  source        String   // auto_scaler | health_monitor | operator | scheduler | agi_coordinator
+
+  // Target
+  targetType    String   // node | cluster | provider | region | global
+  targetId      String?
+
+  // Command data
+  params        String?  @db.Text // JSON — command parameters
+  priority      Int      @default(0)
+
+  // Status
+  status        String   @default("issued") // issued | acknowledged | executing | completed | failed | cancelled
+
+  // Execution
+  executedBy    String?  // system | agent | user
+  startedAt     DateTime?
+  completedAt   DateTime?
+  result        String?  @db.Text // JSON — execution result
+  error         String?  @db.Text
+
+  // Coordination
+  correlationId String?
+  traceId       String?
+
+  metadata      String?  // JSON
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 }

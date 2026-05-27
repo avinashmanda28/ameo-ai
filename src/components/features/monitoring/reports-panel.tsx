@@ -109,22 +109,22 @@ interface DistributionBucket {
 
 function scoreColor(score: number | null): string {
   if (score === null) return 'text-zinc-400';
-  if (score >= 80) return 'text-emerald-600 dark:text-emerald-400';
-  if (score >= 50) return 'text-amber-600 dark:text-amber-400';
+  if (score >= 80) return 'text-blue-600 dark:text-blue-400';
+  if (score >= 50) return 'text-slate-600 dark:text-slate-400';
   return 'text-red-600 dark:text-red-400';
 }
 
 function scoreBgColor(score: number | null): string {
   if (score === null) return 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400';
-  if (score >= 80) return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400';
-  if (score >= 50) return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400';
+  if (score >= 80) return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
+  if (score >= 50) return 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400';
   return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
 }
 
 function barColor(value: number): string {
-  if (value >= 80) return 'bg-emerald-500';
+  if (value >= 80) return 'bg-blue-500';
   if (value >= 60) return 'bg-sky-500';
-  if (value >= 40) return 'bg-amber-500';
+  if (value >= 40) return 'bg-slate-500';
   return 'bg-red-500';
 }
 
@@ -501,28 +501,28 @@ export function ReportsPanel() {
           value={workflows.length}
           subtitle={`${workflows.filter((w) => w.state === 'active').length} active`}
           icon={Workflow}
-          accentColor="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"
+          accentColor="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary"
         />
         <MetricCard
           title="Total Agents"
           value={agents.length}
           subtitle={`${agents.filter((a) => a.status === 'active' || a.status === 'busy').length} active`}
           icon={Bot}
-          accentColor="bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400"
+          accentColor="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary"
         />
         <MetricCard
           title="Total Ratings"
           value={stats?.totalRatings ?? ratings.length}
           subtitle="Across all targets"
           icon={Star}
-          accentColor="bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400"
+          accentColor="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary"
         />
         <MetricCard
           title="Avg Overall Score"
           value={avgScore !== null ? avgScore.toFixed(1) : '—'}
           subtitle={avgScore !== null ? (avgScore >= 80 ? 'Excellent' : avgScore >= 50 ? 'Fair' : 'Needs Work') : 'No data'}
           icon={TrendingUp}
-          accentColor="bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400"
+          accentColor="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary"
         />
       </div>
 

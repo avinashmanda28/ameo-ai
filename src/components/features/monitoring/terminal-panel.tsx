@@ -58,21 +58,21 @@ function generateId(): string {
 const LEVEL_COLORS: Record<LogLevel, string> = {
   debug: 'text-zinc-500',
   info: 'text-zinc-300',
-  warn: 'text-yellow-400',
+  warn: 'text-slate-400',
   error: 'text-red-400',
 };
 
 const LEVEL_BADGE_COLORS: Record<LogLevel, string> = {
   debug: 'bg-zinc-800 text-zinc-500 border-zinc-700',
-  info: 'bg-zinc-800 text-sky-400 border-zinc-700',
-  warn: 'bg-yellow-900/40 text-yellow-400 border-yellow-700',
+  info: 'bg-zinc-800 text-primary/70 border-zinc-700',
+  warn: 'bg-slate-800 text-slate-400 border-slate-700',
   error: 'bg-red-900/40 text-red-400 border-red-700',
 };
 
 const SOURCE_COLORS: Record<string, string> = {
-  audit: 'text-amber-400',
-  agent: 'text-emerald-400',
-  system: 'text-sky-400',
+  audit: 'text-slate-400',
+  agent: 'text-blue-400',
+  system: 'text-primary/80',
 };
 
 const LEVEL_ICONS: Record<LogLevel, React.ComponentType<{ className?: string }>> = {
@@ -357,7 +357,7 @@ export function TerminalPanel() {
             </Badge>
           )}
           {warnCount > 0 && (
-            <Badge className="text-[10px] h-5 bg-yellow-900/40 text-yellow-400 border-yellow-700 font-mono">
+            <Badge className="text-[10px] h-5 bg-slate-800 text-slate-400 border-slate-700 font-mono">
               <AlertTriangle className="w-3 h-3 mr-1" />
               {warnCount}
             </Badge>
@@ -413,8 +413,8 @@ export function TerminalPanel() {
           <div className="flex items-center gap-2 px-4 py-2 bg-zinc-900 border-b border-zinc-800">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-              <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+              <span className="w-2.5 h-2.5 rounded-full bg-slate-400/80" />
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-500/80" />
             </div>
             <span className="text-[11px] text-zinc-500 font-mono ml-2">ameo://terminal-observer</span>
             <div className="flex-1" />

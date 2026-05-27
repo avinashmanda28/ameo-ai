@@ -49,9 +49,9 @@ function ApprovalItem({
   resolving: boolean;
 }) {
   return (
-    <div className="flex items-start gap-3 p-3 rounded-lg border border-amber-200/60 dark:border-amber-800/30 bg-amber-50/50 dark:bg-amber-900/10">
-      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 shrink-0 mt-0.5">
-        <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+    <div className="flex items-start gap-3 p-3 rounded-lg border border-primary/20 dark:border-primary/30 bg-primary/[0.02] dark:bg-primary/[0.04]">
+      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 dark:bg-primary/20 shrink-0 mt-0.5">
+        <AlertTriangle className="w-4 h-4 text-primary dark:text-primary" />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
@@ -75,7 +75,7 @@ function ApprovalItem({
         <div className="flex items-center gap-2">
           <Button
             size="sm"
-            className="h-7 text-[11px] px-3 bg-emerald-600 hover:bg-emerald-700"
+            className="h-7 text-[11px] px-3 bg-primary hover:bg-primary/90"
             onClick={onApprove}
             disabled={resolving}
           >
@@ -204,15 +204,15 @@ export function ApprovalBanner() {
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-lg px-4"
         >
-          <div className="rounded-xl border border-amber-200 dark:border-amber-800/40 bg-background/95 backdrop-blur-md shadow-lg shadow-amber-500/5 overflow-hidden">
+          <div className="rounded-xl border border-primary/20 dark:border-primary/30 bg-background/95 backdrop-blur-md shadow-lg shadow-primary/5 overflow-hidden">
             {/* Collapsed state */}
             {!expanded && (
               <button
                 onClick={() => setExpanded(true)}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-amber-50/50 dark:hover:bg-amber-900/10 transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-primary/[0.02] dark:hover:bg-primary/[0.04] transition-colors"
               >
-                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 shrink-0">
-                  <Shield className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 dark:bg-primary/20 shrink-0">
+                  <Shield className="w-4 h-4 text-primary dark:text-primary" />
                 </div>
                 <div className="flex-1 text-left min-w-0">
                   <div className="flex items-center gap-2">
@@ -220,8 +220,8 @@ export function ApprovalBanner() {
                       {pendingApprovals.length} Pending Approval{pendingApprovals.length > 1 ? 's' : ''}
                     </span>
                     <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/70 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
                     </span>
                   </div>
                   <p className="text-[11px] text-muted-foreground truncate">
@@ -236,14 +236,14 @@ export function ApprovalBanner() {
             {/* Expanded state */}
             {expanded && (
               <div>
-                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-amber-200/60 dark:border-amber-800/30 bg-amber-50/50 dark:bg-amber-900/10">
-                  <Shield className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                <div className="flex items-center gap-2 px-4 py-2.5 border-b border-primary/20 dark:border-primary/30 bg-primary/[0.02] dark:bg-primary/[0.04]">
+                  <Shield className="w-4 h-4 text-primary dark:text-primary" />
                   <span className="text-xs font-semibold text-foreground">
                     Pending Approvals ({pendingApprovals.length})
                   </span>
                   <button
                     onClick={() => setExpanded(false)}
-                    className="ml-auto p-1 rounded-md hover:bg-amber-100 dark:hover:bg-amber-900/20 transition-colors"
+                    className="ml-auto p-1 rounded-md hover:bg-muted transition-colors"
                   >
                     <ChevronDown className="w-4 h-4 text-muted-foreground" />
                   </button>

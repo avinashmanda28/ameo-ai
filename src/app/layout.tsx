@@ -1,28 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
 import "./globals.css";
 import { Providers } from "./providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Ameo AI — Governed AI-Native Operational Platform",
+  title: "Ameo AI — AI-Native Operational Platform",
   description: "Ameo AI: AI-native operational system for creating, managing, and orchestrating digital products with governance-first architecture.",
   keywords: ["Ameo AI", "AI Platform", "Governance", "Runtime", "Workflow Engine", "Agent System", "TypeScript", "Next.js"],
   authors: [{ name: "Ameo AI Team" }],
   icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
+    icon: "/favicon.svg",
   },
   openGraph: {
-    title: "Ameo AI — Governed AI Platform",
+    title: "Ameo AI — AI-Native Operational Platform",
     description: "AI-native operational system with governance-first architecture",
     siteName: "Ameo AI",
     type: "website",
@@ -41,9 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
-      >
+      <body className="antialiased bg-background text-foreground" style={{ fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}>
         <Providers>
           {children}
         </Providers>

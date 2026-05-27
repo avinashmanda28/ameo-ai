@@ -72,7 +72,7 @@ const itemVariants = {
 const LEVEL_BADGE: Record<EventLevel, string> = {
   debug: 'bg-zinc-800 text-zinc-400 border-zinc-700',
   info: 'bg-sky-900/30 text-sky-400 border-sky-800/50',
-  warn: 'bg-amber-900/30 text-amber-400 border-amber-800/50',
+  warn: 'bg-slate-800 text-slate-400 border-slate-700',
   error: 'bg-red-900/30 text-red-400 border-red-800/50',
   critical: 'bg-red-900/40 text-red-300 border-red-700/50',
 };
@@ -80,7 +80,7 @@ const LEVEL_BADGE: Record<EventLevel, string> = {
 const LEVEL_DOT: Record<EventLevel, string> = {
   debug: 'bg-zinc-500',
   info: 'bg-sky-500',
-  warn: 'bg-amber-500',
+  warn: 'bg-slate-400',
   error: 'bg-red-500',
   critical: 'bg-red-500 animate-pulse',
 };
@@ -88,22 +88,22 @@ const LEVEL_DOT: Record<EventLevel, string> = {
 const TRACE_STATUS_BADGE: Record<TraceStatus, string> = {
   pending: 'bg-zinc-800 text-zinc-400 border-zinc-700',
   running: 'bg-sky-900/30 text-sky-400 border-sky-800/50',
-  completed: 'bg-emerald-900/30 text-emerald-400 border-emerald-800/50',
+  completed: 'bg-blue-900/30 text-blue-400 border-blue-800/50',
   failed: 'bg-red-900/30 text-red-400 border-red-800/50',
   skipped: 'bg-zinc-800 text-zinc-500 border-zinc-700',
 };
 
 const HEALTH_SEV_BADGE: Record<HealthSeverity, string> = {
-  normal: 'bg-emerald-900/30 text-emerald-400 border-emerald-800/50',
-  warning: 'bg-amber-900/30 text-amber-400 border-amber-800/50',
-  degraded: 'bg-orange-900/30 text-orange-400 border-orange-800/50',
+  normal: 'bg-blue-900/30 text-blue-400 border-blue-800/50',
+  warning: 'bg-slate-800 text-slate-400 border-slate-700',
+  degraded: 'bg-slate-800 text-slate-400 border-slate-700',
   critical: 'bg-red-900/30 text-red-400 border-red-800/50',
 };
 
 const COORD_STATUS_BADGE: Record<CoordinationStatus, string> = {
   claimed: 'bg-sky-900/30 text-sky-400 border-sky-800/50',
-  active: 'bg-emerald-900/30 text-emerald-400 border-emerald-800/50',
-  handed_off: 'bg-violet-900/30 text-violet-400 border-violet-800/50',
+  active: 'bg-blue-900/30 text-blue-400 border-blue-800/50',
+  handed_off: 'bg-slate-800 text-slate-400 border-slate-700',
   completed: 'bg-zinc-800 text-zinc-400 border-zinc-700',
   failed: 'bg-red-900/30 text-red-400 border-red-800/50',
   expired: 'bg-zinc-800 text-zinc-500 border-zinc-700',
@@ -260,7 +260,7 @@ function EventStreamTab() {
           size="sm"
           className={cn(
             'h-8 text-xs',
-            autoRefresh ? 'text-emerald-400' : 'text-zinc-500'
+            autoRefresh ? 'text-blue-400' : 'text-zinc-500'
           )}
           onClick={() => setAutoRefresh(!autoRefresh)}
         >
@@ -475,7 +475,7 @@ function TraceChain({
           <div className="flex items-center gap-2">
             <span className="text-[10px] text-zinc-500">{steps.length} steps</span>
             {completedCount > 0 && (
-              <span className="text-[10px] text-emerald-500">{completedCount} done</span>
+              <span className="text-[10px] text-blue-500">{completedCount} done</span>
             )}
             {failedCount > 0 && (
               <span className="text-[10px] text-red-500">{failedCount} failed</span>
@@ -496,7 +496,7 @@ function TraceChain({
                 {/* Step connector dot */}
                 <div className={cn(
                   'absolute -left-[1.3rem] top-3 w-3 h-3 rounded-full border-2 border-zinc-950',
-                  step.status === 'completed' ? 'bg-emerald-500' :
+                  step.status === 'completed' ? 'bg-blue-500' :
                   step.status === 'running' ? 'bg-sky-500 animate-pulse' :
                   step.status === 'failed' ? 'bg-red-500' :
                   'bg-zinc-600'
@@ -644,7 +644,7 @@ function AgentCoordinationTab() {
                           <span className="font-mono">Agent: {coord.ownerAgentType || coord.ownerAgentId.slice(0, 8)}</span>
                           <span className="font-mono">P{coord.priority}</span>
                           {coord.isLocked ? (
-                            <span className="flex items-center gap-1 text-amber-500">
+                            <span className="flex items-center gap-1 text-slate-500">
                               <Lock className="w-3 h-3" /> locked
                             </span>
                           ) : (
@@ -653,7 +653,7 @@ function AgentCoordinationTab() {
                             </span>
                           )}
                           {coord.handedOffTo && (
-                            <span className="text-violet-400">handed off</span>
+                            <span className="text-slate-400">handed off</span>
                           )}
                         </div>
                         {coord.description && (
@@ -666,7 +666,7 @@ function AgentCoordinationTab() {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="h-7 text-[10px] px-2 border-emerald-800/40 text-emerald-400 hover:bg-emerald-900/20"
+                            className="h-7 text-[10px] px-2 border-blue-800/40 text-blue-400 hover:bg-blue-900/20"
                             onClick={() => handleAction(coord.taskId, 'complete')}
                             disabled={actionLoading === coord.taskId}
                           >
@@ -750,7 +750,7 @@ function StateSnapshotsTab() {
             {snapshots.length} snapshots
           </Badge>
           {snapshots.filter((s) => s.driftDetected).length > 0 && (
-            <Badge variant="secondary" className="text-[10px] h-6 px-2 bg-amber-900/30 text-amber-400 border-amber-800/50">
+            <Badge variant="secondary" className="text-[10px] h-6 px-2 bg-slate-800 text-slate-400 border-slate-700">
               <AlertTriangle className="w-3 h-3 mr-1" />
               {snapshots.filter((s) => s.driftDetected).length} drift
             </Badge>
@@ -796,7 +796,7 @@ function StateSnapshotsTab() {
                         className={cn(
                           'rounded-lg border p-2.5 cursor-pointer transition-colors',
                           snap.driftDetected
-                            ? 'border-amber-800/40 bg-amber-950/10 hover:border-amber-700/50'
+                            ? 'border-slate-700 bg-slate-950/10 hover:border-slate-600'
                             : 'border-zinc-800/60 bg-zinc-900/30 hover:border-zinc-700/60'
                         )}
                         onClick={() => setExpandedId(expandedId === snap.id ? null : snap.id)}
@@ -807,16 +807,16 @@ function StateSnapshotsTab() {
                             className={cn(
                               'text-[10px] h-5 px-1.5 border',
                               snap.consistencyStatus === 'consistent'
-                                ? 'bg-emerald-900/20 text-emerald-400 border-emerald-800/40'
+                                ? 'bg-blue-900/20 text-blue-400 border-blue-800/40'
                                 : snap.consistencyStatus === 'drifted'
-                                  ? 'bg-amber-900/20 text-amber-400 border-amber-800/40'
+                                  ? 'bg-slate-800 text-slate-400 border-slate-700'
                                   : 'bg-zinc-800 text-zinc-500 border-zinc-700'
                             )}
                           >
                             {snap.consistencyStatus}
                           </Badge>
                           {snap.driftDetected && (
-                            <span className="text-[10px] text-amber-500 flex items-center gap-1">
+                            <span className="text-[10px] text-slate-500 flex items-center gap-1">
                               <AlertTriangle className="w-3 h-3" /> drift detected
                             </span>
                           )}
@@ -827,7 +827,7 @@ function StateSnapshotsTab() {
                         )}
                         {expandedId === snap.id && snap.driftDetails && (
                           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="mt-2">
-                            <pre className="text-[11px] text-amber-400/80 bg-zinc-950 rounded p-2 overflow-x-auto font-mono max-h-32">{tryParseJson(snap.driftDetails)}</pre>
+                            <pre className="text-[11px] text-slate-400/80 bg-zinc-950 rounded p-2 overflow-x-auto font-mono max-h-32">{tryParseJson(snap.driftDetails)}</pre>
                           </motion.div>
                         )}
                       </div>

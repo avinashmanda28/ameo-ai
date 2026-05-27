@@ -33,11 +33,11 @@ import type { RuntimeExecution } from '@/lib/stores/execution-store';
 // ─── Color palette ────────────────────────────────────────────
 
 const CHART_COLORS: Record<string, string> = {
-  completed: '#10b981',
+  completed: '#2563eb',
   failed: '#ef4444',
   pending: '#94a3b8',
   timed_out: '#f97316',
-  executing: '#0ea5e9',
+  executing: '#3b82f6',
   awaiting_approval: '#f59e0b',
 };
 
@@ -224,11 +224,9 @@ function ProviderPerformance({ executions }: { executions: RuntimeExecution[] })
                   variant="secondary"
                   className={cn(
                     'text-[10px] h-5 px-1.5 font-mono',
-                    parseFloat(successRate) >= 80
-                      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                      : parseFloat(successRate) >= 50
-                        ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
-                        : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                    parseFloat(successRate) >= 80          ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary'
+                          : parseFloat(successRate) >= 50                              ? 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                            : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                   )}
                 >
                   {successRate}%
@@ -274,13 +272,13 @@ function RecentExecutionsTable({ executions }: { executions: RuntimeExecution[] 
           {recent.map((exec) => {
             const statusColors: Record<string, string> = {
               pending: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
-              awaiting_approval: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-              approved: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+              awaiting_approval: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+              approved: 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary',
               rejected: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-              executing: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
-              completed: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+              executing: 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary',
+              completed: 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary',
               failed: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-              timed_out: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+              timed_out: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
             };
 
             const statusLabels: Record<string, string> = {
@@ -325,8 +323,7 @@ function RecentExecutionsTable({ executions }: { executions: RuntimeExecution[] 
                       variant="secondary"
                       className={cn(
                         'text-[9px] h-4 px-1.5',
-                        exec.verificationResult === 'pass'
-                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                        exec.verificationResult === 'pass'                            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
                           : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                       )}
                     >
@@ -394,8 +391,8 @@ export function RuntimeMetricsPanel() {
     <div className="p-4 md:p-6 space-y-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-rose-100 dark:bg-rose-900/30">
-          <Activity className="w-5 h-5 text-rose-700 dark:text-rose-400" />
+        <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10 dark:bg-primary/20">
+          <Activity className="w-5 h-5 text-primary dark:text-primary" />
         </div>
         <div>
           <h1 className="text-lg font-semibold text-foreground">Runtime Metrics</h1>
@@ -418,27 +415,27 @@ export function RuntimeMetricsPanel() {
             label="Total Executions"
             value={metrics.total}
             icon={Zap}
-            color="bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400"
+            color="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary"
           />
           <StatCard
             label="Success Rate"
             value={`${metrics.successRate}%`}
             sublabel={`${metrics.completed} / ${metrics.total} successful`}
             icon={TrendingUp}
-            color="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"
+            color="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary"
           />
           <StatCard
             label="Avg Latency"
             value={metrics.avgLatency > 0 ? `${metrics.avgLatency}ms` : '—'}
             sublabel="Across all providers"
             icon={Clock}
-            color="bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400"
+            color="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
           />
           <StatCard
             label="Pending Approvals"
             value={metrics.pendingApprovals}
             icon={Shield}
-            color="bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400"
+            color="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary"
           />
         </div>
       )}
@@ -477,21 +474,21 @@ export function RuntimeMetricsPanel() {
           value={metrics.hallucinations}
           sublabel={metrics.total > 0 ? `${((metrics.hallucinations / metrics.total) * 100).toFixed(1)}% detection rate` : 'No data'}
           icon={AlertTriangle}
-          color="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
+          color="bg-destructive/10 dark:bg-destructive/20 text-destructive dark:text-destructive"
         />
         <StatCard
           label="Verification Pass Rate"
           value={metrics.verificationPassRate !== '—' ? `${metrics.verificationPassRate}%` : '—'}
           sublabel={`${metrics.verifiedPassed} passed / ${metrics.verifiedFailed} failed`}
           icon={CheckCircle2}
-          color="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"
+          color="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary"
         />
         <StatCard
           label="Failed Executions"
           value={metrics.failed}
           sublabel={metrics.total > 0 ? `${((metrics.failed / metrics.total) * 100).toFixed(1)}% failure rate` : 'No data'}
           icon={XCircle}
-          color="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
+          color="bg-destructive/10 dark:bg-destructive/20 text-destructive dark:text-destructive"
         />
         <StatCard
           label="Quality Avg"
@@ -503,7 +500,7 @@ export function RuntimeMetricsPanel() {
           })()}
           sublabel="Across verified executions"
           icon={Brain}
-          color="bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400"
+          color="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary"
         />
       </div>
 

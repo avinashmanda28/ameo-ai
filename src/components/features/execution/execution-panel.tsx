@@ -186,13 +186,13 @@ function ResponseViewer({
 
       {/* Status-specific indicators */}
       {execution.status === 'awaiting_approval' && (
-        <div className="flex items-center gap-2 rounded-lg border border-amber-200 dark:border-amber-800/40 bg-amber-50 dark:bg-amber-900/10 p-3">
-          <Shield className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+        <div className="flex items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/10 p-3">
+          <Shield className="w-4 h-4 text-slate-600 dark:text-slate-400 shrink-0" />
           <div className="flex-1">
-            <p className="text-xs font-medium text-amber-800 dark:text-amber-300">
+            <p className="text-xs font-medium text-slate-700 dark:text-slate-300">
               Awaiting Approval
             </p>
-            <p className="text-[11px] text-amber-600 dark:text-amber-400">
+            <p className="text-[11px] text-slate-600 dark:text-slate-400">
               This execution requires approval before proceeding. Check the approval banner.
             </p>
           </div>
@@ -262,7 +262,7 @@ function ResponseViewer({
             className={cn(
               'text-[10px] h-6 px-2',
               execution.verificationResult === 'pass'
-                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
                 : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
             )}
           >
@@ -405,8 +405,8 @@ export function ExecutionPanel() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-amber-100 dark:bg-amber-900/30">
-            <Zap className="w-5 h-5 text-amber-700 dark:text-amber-400" />
+          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800">
+            <Zap className="w-5 h-5 text-slate-600 dark:text-slate-400" />
           </div>
           <div>
             <h1 className="text-lg font-semibold text-foreground">Runtime Execution</h1>

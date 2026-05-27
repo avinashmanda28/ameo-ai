@@ -112,8 +112,8 @@ function AuditLogEntry({
   };
 
   const SEVERITY_COLORS: Record<string, string> = {
-    info: 'text-emerald-500',
-    warn: 'text-amber-500',
+    info: 'text-blue-500',
+    warn: 'text-slate-500',
     error: 'text-red-500',
     critical: 'text-red-600',
   };
@@ -143,10 +143,10 @@ function AuditLogEntry({
         variant="secondary"
         className={cn(
           'text-[10px] h-5 px-1.5 shrink-0 capitalize',
-          log.severity === 'error' && 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-          log.severity === 'warn' && 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+          log.severity === 'error' && 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400',
+          log.severity === 'warn' && 'bg-slate-50 text-slate-700 dark:bg-slate-800 dark:text-slate-400',
           log.severity === 'critical' && 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300',
-          log.severity === 'info' && 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+          log.severity === 'info' && 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400'
         )}
       >
         {log.severity}
@@ -169,22 +169,22 @@ function RuntimeHealthEntry({
   type: string;
 }) {
   const STATUS_DOT: Record<string, string> = {
-    active: 'bg-emerald-500',
-    inactive: 'bg-zinc-400',
+    active: 'bg-blue-500',
+    inactive: 'bg-slate-400',
     error: 'bg-red-500',
-    verifying: 'bg-amber-500',
+    verifying: 'bg-slate-400',
   };
 
   const TYPE_COLORS: Record<string, string> = {
-    openrouter: 'text-emerald-600 dark:text-emerald-400',
-    groq: 'text-orange-600 dark:text-orange-400',
-    gemini: 'text-sky-600 dark:text-sky-400',
-    ollama: 'text-zinc-600 dark:text-zinc-400',
+    openrouter: 'text-blue-600 dark:text-blue-400',
+    groq: 'text-blue-600 dark:text-blue-400',
+    gemini: 'text-slate-600 dark:text-slate-400',
+    ollama: 'text-slate-500 dark:text-slate-500',
   };
 
   const scoreColor =
-    healthScore >= 80 ? 'text-emerald-600 dark:text-emerald-400' :
-    healthScore >= 50 ? 'text-amber-600 dark:text-amber-400' :
+    healthScore >= 80 ? 'text-blue-600 dark:text-blue-400' :
+    healthScore >= 50 ? 'text-slate-600 dark:text-slate-400' :
     'text-red-600 dark:text-red-400';
 
   return (
@@ -277,28 +277,28 @@ export function OverviewPanel() {
           value={activeWorkflows}
           subtitle={`${workflows.length} total`}
           icon={Workflow}
-          accentColor="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"
+          accentColor="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
         />
         <MetricCard
           title="Connected Runtimes"
           value={activeRuntimes}
           subtitle={`${runtimes.length} configured`}
           icon={Cpu}
-          accentColor="bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400"
+          accentColor="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
         />
         <MetricCard
           title="Active Agents"
           value={activeAgents}
           subtitle={`${agents.length} deployed`}
           icon={Bot}
-          accentColor="bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400"
+          accentColor="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
         />
         <MetricCard
           title="Governance Rules"
           value={governanceRules.length}
           subtitle={`${governanceRules.filter((r) => r.enabled).length} enabled`}
           icon={Shield}
-          accentColor="bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400"
+          accentColor="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
         />
       </div>
 

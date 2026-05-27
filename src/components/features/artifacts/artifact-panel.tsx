@@ -72,7 +72,7 @@ function statusLabel(status: string): string {
 function statusColor(status: string): string {
   const colors: Record<string, string> = {
     draft: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
-    verified: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+    verified: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
     approved: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
     rejected: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
     archived: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
@@ -266,13 +266,13 @@ function ArtifactViewer({
               <Button
                 size="sm"
                 variant="ghost"
-                className="h-7 text-[11px] px-2 text-emerald-600 hover:text-emerald-700"
+                className="h-7 text-[11px] px-2 text-blue-600 hover:text-blue-700"
                 onClick={handleSave}
                 disabled={saving}
               >
                 {saving ? (
                   <span className="flex items-center gap-1">
-                    <span className="w-3 h-3 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+                    <span className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
                     Saving
                   </span>
                 ) : (
@@ -374,7 +374,7 @@ function ArtifactViewer({
               className={cn(
                 'flex items-center gap-1.5 font-medium',
                 artifact.verificationResult === 'pass'
-                  ? 'text-emerald-600 dark:text-emerald-400'
+                  ? 'text-blue-600 dark:text-blue-400'
                   : 'text-red-600 dark:text-red-400'
               )}
             >
@@ -498,8 +498,8 @@ export function ArtifactPanel() {
     <div className="p-4 md:p-6 space-y-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
-          <FileCode className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+        <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10 dark:bg-primary/20">
+          <FileCode className="w-5 h-5 text-primary dark:text-primary" />
         </div>
         <div>
           <div className="flex items-center gap-2">

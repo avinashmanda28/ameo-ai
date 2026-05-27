@@ -89,10 +89,10 @@ const WORKFLOW_TYPE_LABELS: Record<WfType, string> = {
 };
 
 const WORKFLOW_TYPE_COLORS: Record<WfType, string> = {
-  build: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-  test: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
-  deploy: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  custom: 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
+  build: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  test: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+  deploy: 'bg-primary/10 text-primary dark:text-blue-400',
+  custom: 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400',
 };
 
 const WORKFLOW_TYPE_ICONS: Record<WfType, React.ComponentType<{ className?: string }>> = {
@@ -645,7 +645,7 @@ function WorkflowCard({
           <div className="flex items-center gap-3 mt-3 pt-2.5 border-t border-border/50">
             {/* Priority */}
             <div className="flex items-center gap-1">
-              <Flame className={cn('w-3.5 h-3.5', workflow.priority >= 7 ? 'text-red-500' : workflow.priority >= 4 ? 'text-amber-500' : 'text-slate-400')} />
+              <Flame className={cn('w-3.5 h-3.5', workflow.priority >= 7 ? 'text-red-500' : workflow.priority >= 4 ? 'text-slate-500' : 'text-slate-400')} />
               <span className="text-xs text-muted-foreground tabular-nums">{workflow.priority}</span>
             </div>
             {/* Execution count */}
@@ -693,9 +693,9 @@ function ExecutionRow({ execution }: ExecutionRowProps) {
             variant="secondary"
             className={cn(
               'text-[10px] h-4 px-1.5 capitalize',
-              execution.status === 'completed' && 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+              execution.status === 'completed' && 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
               execution.status === 'failed' && 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-              execution.status === 'running' && 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
+              execution.status === 'running' && 'bg-primary/10 text-primary dark:text-blue-400',
               execution.status === 'pending' && 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400',
               execution.status === 'cancelled' && 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
             )}
@@ -837,7 +837,7 @@ function DetailPanel({ workflow, onClose, onEdit, onTransition }: DetailPanelPro
             <div className="rounded-lg border bg-muted/30 p-3">
               <p className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">Priority</p>
               <div className="flex items-center gap-1.5">
-                <Flame className={cn('w-4 h-4', workflow.priority >= 7 ? 'text-red-500' : workflow.priority >= 4 ? 'text-amber-500' : 'text-slate-400')} />
+                <Flame className={cn('w-4 h-4', workflow.priority >= 7 ? 'text-red-500' : workflow.priority >= 4 ? 'text-slate-500' : 'text-slate-400')} />
                 <span className="text-sm font-semibold tabular-nums">{workflow.priority}/10</span>
               </div>
             </div>
@@ -1014,7 +1014,7 @@ export function WorkflowEnginePanel() {
       <motion.div variants={itemVariants} className="px-5 pt-5 pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-primary/10">
+            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-primary/10 ring-1 ring-primary/20">
               <Workflow className="w-5 h-5 text-primary" />
             </div>
             <div>

@@ -55,9 +55,9 @@ interface QueueStats {
 const STATUS_COLORS: Record<QueueItemStatus, string> = {
   pending: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
   running: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
-  completed: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  completed: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   failed: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  retrying: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  retrying: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
   cancelled: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
 };
 
@@ -112,7 +112,7 @@ function timeAgo(dateStr: string): string {
 
 function priorityColor(priority: number): string {
   if (priority >= 8) return 'text-red-500';
-  if (priority >= 5) return 'text-amber-500';
+  if (priority >= 5) return 'text-slate-500';
   return 'text-slate-400';
 }
 
@@ -165,7 +165,7 @@ function QueueItemRow({ item, onRetry, onCancel, retryingId, cancellingId }: Que
             className={cn(
               'w-4 h-4 mt-0.5 shrink-0',
               isRunning && 'animate-spin',
-              item.status === 'failed' ? 'text-red-500' : item.status === 'completed' ? 'text-emerald-500' : item.status === 'running' ? 'text-sky-500' : 'text-zinc-500'
+              item.status === 'failed' ? 'text-red-500' : item.status === 'completed' ? 'text-blue-500' : item.status === 'running' ? 'text-blue-500' : 'text-zinc-500'
             )}
           />
           <div className="flex-1 min-w-0">
@@ -179,7 +179,7 @@ function QueueItemRow({ item, onRetry, onCancel, retryingId, cancellingId }: Que
                 <span className="tabular-nums">P{item.priority}</span>
               </span>
               {item.retryCount > 0 && (
-                <span className="flex items-center gap-1 text-[10px] text-amber-500">
+                <span className="flex items-center gap-1 text-[10px] text-slate-500">
                   <RotateCcw className="w-3 h-3" />
                   <span className="tabular-nums">{item.retryCount}/{item.maxRetries}</span>
                 </span>
@@ -199,7 +199,7 @@ function QueueItemRow({ item, onRetry, onCancel, retryingId, cancellingId }: Que
             <Button
               size="sm"
               variant="outline"
-              className="h-7 text-[11px] px-2 border-amber-800/40 text-amber-400 hover:bg-amber-900/20 hover:text-amber-300"
+              className="h-7 text-[11px] px-2 border-slate-700 text-slate-400 hover:bg-slate-800 hover:text-slate-300"
               onClick={(e) => { e.stopPropagation(); onRetry(item.id); }}
               disabled={retryingId === item.id}
             >
@@ -402,9 +402,9 @@ export function QueuePanel() {
       <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <StatCard label="Pending" count={stats.pending} icon={Clock} colorClass="text-slate-400" />
         <StatCard label="Running" count={stats.running} icon={Zap} colorClass="text-sky-400" />
-        <StatCard label="Completed" count={stats.completed} icon={CheckCircle2} colorClass="text-emerald-400" />
+        <StatCard label="Completed" count={stats.completed} icon={CheckCircle2} colorClass="text-blue-400" />
         <StatCard label="Failed" count={stats.failed} icon={XCircle} colorClass="text-red-400" />
-        <StatCard label="Retrying" count={stats.retrying} icon={RotateCcw} colorClass="text-amber-400" />
+        <StatCard label="Retrying" count={stats.retrying} icon={RotateCcw} colorClass="text-slate-400" />
         <StatCard label="Total" count={stats.total} icon={ListOrdered} colorClass="text-zinc-400" />
       </motion.div>
 
@@ -436,7 +436,7 @@ export function QueuePanel() {
                   <div className="space-y-2 pr-2">
                     {activeItems.length === 0 && completedItems.length > 0 ? (
                       <div className="flex flex-col items-center justify-center py-8 text-center">
-                        <CheckCircle2 className="w-6 h-6 text-emerald-500/50 mb-2" />
+                        <CheckCircle2 className="w-6 h-6 text-blue-500/50 mb-2" />
                         <p className="text-xs text-zinc-500">All tasks processed</p>
                         <p className="text-[10px] text-zinc-600 mt-0.5">
                           No active items in the queue

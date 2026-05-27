@@ -69,7 +69,7 @@ import { toast } from 'sonner';
 const LOG_LEVEL_COLORS: Record<LogLevel, string> = {
   debug: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400',
   info: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
-  warn: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  warn: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
   error: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 };
 
@@ -228,7 +228,7 @@ function RegisterAgentDialog({
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Bot className="h-5 w-5 text-violet-500" />
+            <Bot className="h-5 w-5 text-primary" />
             Register New Agent
           </DialogTitle>
           <DialogDescription>
@@ -341,7 +341,7 @@ function AgentCard({
       <Card
         className={`relative transition-all duration-200 ${
           isSelected
-            ? 'border-violet-500/60 shadow-lg shadow-violet-500/5 ring-1 ring-violet-500/20'
+            ? 'border-primary/60 shadow-lg shadow-primary/5 ring-1 ring-primary/20'
             : 'hover:border-border/80 hover:shadow-md'
         }`}
       >
@@ -351,7 +351,7 @@ function AgentCard({
               <div
                 className={`flex items-center justify-center w-9 h-9 rounded-lg shrink-0 ${
                   agent.type === 'verification'
-                    ? 'bg-amber-100 dark:bg-amber-900/30'
+                    ? 'bg-primary/10 dark:bg-primary/20'
                     : 'bg-muted'
                 }`}
               >
@@ -417,7 +417,7 @@ function AgentCard({
           </div>
 
           {agent.type === 'verification' && (
-            <div className="flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400 font-medium pt-0.5">
+            <div className="flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 font-medium pt-0.5">
               <ShieldCheck className="h-3 w-3" />
               <span>Verification Authority</span>
             </div>
@@ -426,7 +426,7 @@ function AgentCard({
 
         {isSelected && (
           <motion.div
-            className="absolute top-0 left-0 right-0 h-0.5 bg-violet-500 rounded-t-lg"
+            className="absolute top-0 left-0 right-0 h-0.5 bg-primary rounded-t-lg"
             layoutId="agent-card-indicator"
             transition={{ duration: 0.3 }}
           />
@@ -585,26 +585,26 @@ function VerificationAuthority() {
       initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, delay: 0.1 }}
-      className="rounded-lg border-2 border-amber-500/40 bg-amber-50/50 dark:bg-amber-950/10 p-4 space-y-3"
+      className="rounded-lg border-2 border-primary/20 bg-primary/[0.03] dark:bg-primary/[0.05] p-4 space-y-3"
     >
       <div className="flex items-center gap-2">
-        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/30">
-          <ShieldAlert className="h-4.5 w-4.5 text-amber-600 dark:text-amber-400" />
+        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 dark:bg-primary/20">
+          <ShieldAlert className="h-4.5 w-4.5 text-primary dark:text-primary" />
         </div>
         <div>
-          <h4 className="text-sm font-semibold text-amber-800 dark:text-amber-300">
+          <h4 className="text-sm font-semibold text-primary dark:text-primary">
             Verification Authority
           </h4>
-          <p className="text-[10px] text-amber-600/80 dark:text-amber-400/80 font-medium uppercase tracking-wider">
+          <p className="text-[10px] text-primary/70 dark:text-primary/60 font-medium uppercase tracking-wider">
             Elevated privileges active
           </p>
         </div>
       </div>
 
-      <Separator className="bg-amber-500/20" />
+      <Separator className="bg-primary/20" />
 
       <div className="space-y-2">
-        <p className="text-sm font-medium text-amber-900 dark:text-amber-200">
+        <p className="text-sm font-medium text-slate-800 dark:text-slate-300">
           This agent has the authority to:
         </p>
         <ul className="space-y-1.5">
@@ -613,8 +613,8 @@ function VerificationAuthority() {
             { icon: XCircle, text: 'Reject broken workflows and malformed implementations' },
             { icon: ShieldAlert, text: 'Block hallucinated implementations and false outputs' },
           ].map((item) => (
-            <li key={item.text} className="flex items-start gap-2 text-sm text-amber-800 dark:text-amber-300/90">
-              <item.icon className="h-3.5 w-3.5 mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" />
+            <li key={item.text} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300/80">
+              <item.icon className="h-3.5 w-3.5 mt-0.5 shrink-0 text-primary dark:text-primary" />
               <span>{item.text}</span>
             </li>
           ))}
@@ -622,7 +622,7 @@ function VerificationAuthority() {
       </div>
 
       <div className="flex items-center gap-1.5">
-        <Badge variant="outline" className="border-amber-500/40 text-amber-700 dark:text-amber-400 text-[10px]">
+        <Badge variant="outline" className="border-primary/40 text-primary text-[10px]">
           <ShieldCheck className="h-3 w-3 mr-1" />
           AUTHORIZED
         </Badge>
@@ -722,14 +722,14 @@ function AgentDetailPanel({
             <div
               className={`flex items-center justify-center w-12 h-12 rounded-xl ${
                 isVerification
-                  ? 'bg-amber-100 dark:bg-amber-900/30'
+                  ? 'bg-primary/10 dark:bg-primary/20'
                   : 'bg-muted'
               }`}
             >
               <TypeIcon
                 className={`h-6 w-6 ${
                   isVerification
-                    ? 'text-amber-600 dark:text-amber-400'
+                    ? 'text-primary dark:text-primary'
                     : 'text-muted-foreground'
                 }`}
               />
@@ -909,19 +909,19 @@ function SystemAgentTypesInfo({
                 key={type}
                 className={`flex items-start gap-2.5 p-3 rounded-lg border transition-colors ${
                   isRegistered
-                    ? 'bg-emerald-50/50 dark:bg-emerald-950/10 border-emerald-500/20'
+                    ? 'bg-blue-50/50 dark:bg-blue-950/10 border-primary/20'
                     : 'bg-muted/30 border-dashed border-muted-foreground/20'
                 }`}
               >
                 <div
                   className={`flex items-center justify-center w-8 h-8 rounded-lg shrink-0 ${
                     isRegistered
-                      ? 'bg-emerald-100 dark:bg-emerald-900/30'
+                      ? 'bg-primary/10 ring-1 ring-primary/20'
                       : 'bg-muted'
                   }`}
                 >
                   {isRegistered ? (
-                    <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
                   ) : (
                     <TypeIcon className="h-4 w-4 text-muted-foreground/60" />
                   )}
@@ -935,7 +935,7 @@ function SystemAgentTypesInfo({
                       variant="secondary"
                       className={`text-[9px] px-1 py-0 ${
                         isRegistered
-                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                          ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
                           : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
                       }`}
                     >
@@ -1049,8 +1049,8 @@ export function AgentPanel() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-violet-100 dark:bg-violet-900/30">
-            <Bot className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10 ring-1 ring-primary/20">
+            <Bot className="h-5 w-5 text-primary" />
           </div>
           <div>
             <h1 className="text-lg font-bold text-foreground">Agents</h1>

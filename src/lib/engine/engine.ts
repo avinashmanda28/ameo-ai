@@ -324,6 +324,62 @@ export class RuntimeEngine {
   }
 
   // ═══════════════════════════════════════════════════════════
+  // EXECUTE DIRECT — Simplified prompt execution for agents
+  // ═══════════════════════════════════════════════════════════
+
+  /**
+   * Run a prompt directly without the full execution lifecycle.
+   * Useful for agent prompts that don't need governance, artifacts, etc.
+   */
+  async executeDirect(params: {
+    prompt: string;
+    systemPrompt?: string;
+    temperature?: number;
+    maxTokens?: number;
+  }): Promise<{ response?: string; error?: string }> {
+    try {
+      // Try each registered adapter in priority order until one works
+      const providerTypes = ['openrouter', 'groq', 'gemini', 'ollama'];
+      for (const type of providerTypes) {
+        const adapter = this.adapters.get(type);
+        if (!adapter) continue;
+
+        // Check if an API key is available for this provider
+        const apiKey = process.env[`${type.toUpperCase()}_API_KEY`];
+        if (!apiKey) continue;
+
+        // Default model IDs per provider
+        const defaultModels: Record<string, string> = {
+          openrouter: 'openai/gpt-4o',
+          groq: 'llama3-70b-8192',
+          gemini: 'gemini-2.0-flash',
+          ollama: 'llama3.2',
+        };
+
+        try {
+          const result = await adapter.execute({
+            apiKey,
+            modelId: defaultModels[type] || 'gpt-4o',
+            prompt: params.prompt,
+            systemPrompt: params.systemPrompt,
+            temperature: params.temperature ?? 0.3,
+            maxTokens: params.maxTokens ?? 4096,
+          });
+          return { response: result.content };
+        } catch {
+          // Try next provider
+          continue;
+        }
+      }
+
+      // No provider with API key found
+      return { error: 'No AI provider configured. Set OPENROUTER_API_KEY, GROQ_API_KEY, or GEMINI_API_KEY in your environment.' };
+    } catch (err) {
+      return { error: err instanceof Error ? err.message : 'Execution failed' };
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════
   // RESUME AFTER APPROVAL — Re-execute a previously held request
   // ═══════════════════════════════════════════════════════════
 

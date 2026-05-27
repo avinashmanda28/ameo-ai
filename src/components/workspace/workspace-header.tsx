@@ -52,10 +52,10 @@ const PANEL_GROUPS: Record<string, string> = {
 };
 
 const MODE_BADGE_CLASSES: Record<WorkspaceMode, string> = {
-  builder: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 border-amber-200 dark:border-amber-800/40',
-  operations: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40',
-  strategy: 'bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-400 border-violet-200 dark:border-violet-800/40',
-  governance: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400 border-rose-200 dark:border-rose-800/40',
+  builder: 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 border-blue-200 dark:border-blue-800/40',
+  operations: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700/50',
+  strategy: 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 border-blue-200 dark:border-blue-800/40',
+  governance: 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400 border-blue-200 dark:border-blue-800/40',
 };
 
 // ─── Editable Workspace Name ───────────────────────────────────
@@ -151,11 +151,11 @@ function AgentStatusIndicators() {
   }
 
   const STATUS_DOT_COLORS: Record<string, string> = {
-    idle: 'bg-zinc-400',
-    active: 'bg-emerald-500',
-    busy: 'bg-amber-500',
+    idle: 'bg-slate-400',
+    active: 'bg-blue-500',
+    busy: 'bg-blue-500',
     error: 'bg-red-500',
-    suspended: 'bg-zinc-600',
+    suspended: 'bg-slate-400',
   };
 
   return (
@@ -183,10 +183,10 @@ function ExecutionIndicator() {
   return (
     <div className="flex items-center gap-1.5">
       <span className="relative flex h-2 w-2">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-        <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
+        <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500" />
       </span>
-      <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium hidden sm:inline">
+      <span className="text-[11px] text-slate-600 dark:text-slate-400 font-medium hidden sm:inline">
         Executing...
       </span>
     </div>

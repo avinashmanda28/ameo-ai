@@ -125,7 +125,7 @@ function CheckpointRow({ checkpoint, onRecover, workflowId, recovering }: Checkp
       <Button
         size="sm"
         variant="outline"
-        className="h-7 text-[11px] px-2.5 border-emerald-800/40 text-emerald-400 hover:bg-emerald-900/20 hover:text-emerald-300 shrink-0"
+        className="h-7 text-[11px] px-2.5 border-blue-800/40 text-blue-400 hover:bg-blue-900/20 hover:text-blue-300 shrink-0"
         onClick={() => onRecover(workflowId, checkpoint.id)}
         disabled={recovering}
       >
@@ -151,11 +151,11 @@ function AuditLogRow({ log }: AuditLogRowProps) {
     <div className="flex items-start gap-2.5 py-1.5">
       <div className="mt-0.5">
         {log.status === 'success' ? (
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+          <CheckCircle2 className="w-3.5 h-3.5 text-blue-500" />
         ) : log.status === 'failed' ? (
           <XCircle className="w-3.5 h-3.5 text-red-500" />
         ) : (
-          <Loader2 className="w-3.5 h-3.5 text-amber-500" />
+          <Loader2 className="w-3.5 h-3.5 text-slate-400" />
         )}
       </div>
       <div className="flex-1 min-w-0">
@@ -190,7 +190,7 @@ function WorkflowRecoveryCard({
         'border transition-all duration-200',
         workflow.state === 'blocked'
           ? 'border-red-800/30 bg-red-950/10'
-          : 'border-amber-800/30 bg-amber-950/10'
+          : 'border-slate-700 bg-slate-950/10'
       )}>
         <Collapsible open={expanded} onOpenChange={setExpanded}>
           <CardHeader className="pb-2 px-4 pt-4">
@@ -199,7 +199,7 @@ function WorkflowRecoveryCard({
                 {workflow.state === 'blocked' ? (
                   <AlertTriangle className="w-4 h-4 mt-0.5 text-red-400 shrink-0" />
                 ) : (
-                  <Loader2 className="w-4 h-4 mt-0.5 text-amber-400 shrink-0 animate-spin" />
+                  <Loader2 className="w-4 h-4 mt-0.5 text-slate-400 shrink-0 animate-spin" />
                 )}
                 <div className="min-w-0">
                   <h3 className="text-sm font-semibold text-zinc-200 truncate">{workflow.name}</h3>
@@ -302,7 +302,7 @@ function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4">
       <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800/60 mb-4">
-        <ShieldCheck className="w-8 h-8 text-emerald-600/40" />
+        <ShieldCheck className="w-8 h-8 text-blue-600/40" />
       </div>
       <h3 className="text-base font-semibold text-zinc-300 mb-1">All Workflows Healthy</h3>
       <p className="text-sm text-zinc-500 text-center max-w-sm">
@@ -372,8 +372,8 @@ export function RecoveryPanel() {
       {/* Header */}
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-amber-950/50 ring-1 ring-amber-800/30">
-            <ShieldCheck className="w-5 h-5 text-amber-400" />
+          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-slate-800/50 ring-1 ring-slate-700">
+            <ShieldCheck className="w-5 h-5 text-slate-400" />
           </div>
           <div>
             <h1 className="text-lg font-semibold text-zinc-100">Workflow Recovery</h1>
@@ -390,7 +390,7 @@ export function RecoveryPanel() {
             </Badge>
           )}
           {recoveringCount > 0 && (
-            <Badge variant="outline" className="text-[10px] h-6 px-2 text-amber-400 border-amber-800/40">
+            <Badge variant="outline" className="text-[10px] h-6 px-2 text-slate-400 border-slate-700">
               <Loader2 className="w-3 h-3 mr-1 animate-spin" />
               {recoveringCount} Recovering
             </Badge>

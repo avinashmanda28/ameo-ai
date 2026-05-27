@@ -118,14 +118,14 @@ const itemVariants = {
 
 const AUDIT_SEVERITY_COLORS: Record<AuditSeverity, string> = {
   info: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
-  warn: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  warn: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
   error: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
   critical: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300 font-bold',
 };
 
 const AUDIT_SEVERITY_TEXT: Record<AuditSeverity, string> = {
   info: 'text-muted-foreground',
-  warn: 'text-amber-600 dark:text-amber-400',
+  warn: 'text-slate-600 dark:text-slate-400',
   error: 'text-red-600 dark:text-red-400',
   critical: 'text-red-700 dark:text-red-300 font-semibold',
 };
@@ -138,11 +138,11 @@ const AUDIT_SEVERITY_ICONS: Record<AuditSeverity, React.ComponentType<{ classNam
 };
 
 const RULE_TYPE_COLORS: Record<RuleType, string> = {
-  permission: 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
-  approval: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
-  rate_limit: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+  permission: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  approval: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+  rate_limit: 'bg-primary/10 text-primary dark:text-blue-400',
   security: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  compliance: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  compliance: 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400',
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -235,7 +235,7 @@ function SecuritySummary() {
         label="Active Rules"
         value={activeRules}
         icon={ShieldCheck}
-        accent="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"
+        accent="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
         sub={totalRules > 0 ? `${Math.round((activeRules / totalRules) * 100)}% of rules` : 'No rules yet'}
       />
       <SummaryItem
@@ -249,7 +249,7 @@ function SecuritySummary() {
         label="Audit Events"
         value={totalAuditEvents}
         icon={Activity}
-        accent="bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400"
+        accent="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
         sub="Total logged events"
       />
     </div>
@@ -746,15 +746,15 @@ function RulesTab({ onAddRule }: { onAddRule: () => void }) {
                           <div
                             className={cn(
                               'w-1.5 h-8 rounded-full shrink-0',
-                              rule.enabled
-                                ? rule.severity === 'critical'
+                              !rule.enabled
+                                ? 'bg-muted-foreground/30'
+                                : rule.severity === 'critical'
                                   ? 'bg-red-500'
                                   : rule.severity === 'high'
-                                    ? 'bg-orange-500'
+                                    ? 'bg-red-500'
                                     : rule.severity === 'medium'
-                                      ? 'bg-amber-500'
-                                      : 'bg-emerald-500'
-                                : 'bg-muted-foreground/30'
+                                      ? 'bg-slate-500'
+                                      : 'bg-blue-500'
                             )}
                           />
                           <div className="min-w-0">
@@ -1078,7 +1078,7 @@ function AuditLogTab() {
                               className={cn(
                                 'text-[10px] h-5',
                                 log.approved
-                                  ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
                                   : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                               )}
                             >
@@ -1218,8 +1218,8 @@ export function GovernancePanel() {
       {/* ─── Header ─── */}
       <motion.div variants={itemVariants} className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-red-100 dark:bg-red-900/30">
-            <Shield className="w-5 h-5 text-red-600 dark:text-red-400" />
+          <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-primary/10 ring-1 ring-primary/20">
+            <Shield className="w-5 h-5 text-primary" />
           </div>
           <div>
             <h1 className="text-xl font-bold tracking-tight text-foreground">Governance</h1>

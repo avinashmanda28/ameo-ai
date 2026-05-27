@@ -4,22 +4,27 @@ import React from 'react';
 import {
   Hexagon,
   LayoutDashboard,
-  GitBranch,
-  Cpu,
-  Workflow,
-  Shield,
-  Bot,
-  TerminalSquare,
-  Terminal,
+  Target,
+  TrendingUp,
+  Truck,
+  DollarSign,
+  Search,
+  Store,
+  PenTool,
   BarChart3,
-  Hammer,
+  Package,
+  ShieldCheck,
+  Bot,
   Activity,
-  Compass,
   Zap,
-  FileCode,
-  ListOrdered,
-  AlertOctagon,
   Eye,
+  Settings,
+  Share2,
+  Brain,
+  FileText,
+  Eye as EyeIcon,
+  Play,
+  BarChart4,
 } from 'lucide-react';
 import { useWorkspaceStore } from '@/lib/stores/workspace-store';
 import { WORKSPACE_MODES, type WorkspaceMode } from '@/lib/types';
@@ -40,7 +45,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 
-// ─── Navigation Items ──────────────────────────────────────────
+// ─── Commerce Navigation Items ────────────────────────────────
 
 interface NavItem {
   key: string;
@@ -50,30 +55,47 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { key: 'overview', label: 'Overview', icon: LayoutDashboard, group: 'OVERVIEW' },
-  { key: 'company-graph', label: 'Company Graph', icon: GitBranch, group: 'SYSTEMS' },
-  { key: 'runtime-hub', label: 'Runtime Hub', icon: Cpu, group: 'SYSTEMS' },
-  { key: 'workflows', label: 'Workflows', icon: Workflow, group: 'SYSTEMS' },
-  { key: 'governance', label: 'Governance', icon: Shield, group: 'SYSTEMS' },
-  { key: 'execution', label: 'Execution', icon: Zap, group: 'SYSTEMS' },
-  { key: 'queue', label: 'Queue', icon: ListOrdered, group: 'SYSTEMS' },
-  { key: 'artifacts', label: 'Artifacts', icon: FileCode, group: 'SYSTEMS' },
-  { key: 'developer-console', label: 'Developer Console', icon: Terminal, group: 'OPERATIONS' },
-  { key: 'observability', label: 'Observability', icon: Eye, group: 'OPERATIONS' },
-  { key: 'agents', label: 'Agents', icon: Bot, group: 'INTELLIGENCE' },
-  { key: 'terminal', label: 'Terminal', icon: TerminalSquare, group: 'INTELLIGENCE' },
-  { key: 'reports', label: 'Reports', icon: BarChart3, group: 'INTELLIGENCE' },
-  { key: 'runtime-metrics', label: 'Runtime Metrics', icon: Activity, group: 'INTELLIGENCE' },
-  { key: 'failures', label: 'Failures', icon: AlertOctagon, group: 'INTELLIGENCE' },
+  // COMMAND CENTER
+  { key: 'overview', label: 'Command Center', icon: LayoutDashboard, group: 'COMMAND CENTER' },
+
+  // COMMERCE INTELLIGENCE
+  { key: 'product-intelligence', label: 'Product Intelligence', icon: Target, group: 'COMMERCE INTELLIGENCE' },
+  { key: 'trend-discovery', label: 'Trend Discovery', icon: TrendingUp, group: 'COMMERCE INTELLIGENCE' },
+  { key: 'supplier-analysis', label: 'Supplier Analysis', icon: Truck, group: 'COMMERCE INTELLIGENCE' },
+  { key: 'competitor-intelligence', label: 'Competitor Intel', icon: EyeIcon, group: 'COMMERCE INTELLIGENCE' },
+  { key: 'commerce-memory', label: 'Commerce Memory', icon: Brain, group: 'COMMERCE INTELLIGENCE' },
+
+  // COMMERCE OPERATIONS
+  { key: 'integration-hub', label: 'Integration Hub', icon: Share2, group: 'COMMERCE OPERATIONS' },
+  { key: 'store-automation', label: 'Store Automation', icon: Store, group: 'COMMERCE OPERATIONS' },
+  { key: 'pricing', label: 'Pricing', icon: DollarSign, group: 'COMMERCE OPERATIONS' },
+  { key: 'seo', label: 'SEO & Listings', icon: Search, group: 'COMMERCE OPERATIONS' },
+  { key: 'ad-creative', label: 'Ad Creative', icon: PenTool, group: 'COMMERCE OPERATIONS' },
+  { key: 'creative-generation', label: 'Creative Gen', icon: PenTool, group: 'COMMERCE OPERATIONS' },
+  { key: 'product-pages', label: 'Product Pages', icon: FileText, group: 'COMMERCE OPERATIONS' },
+  { key: 'fulfillment', label: 'Fulfillment', icon: Package, group: 'COMMERCE OPERATIONS' },
+
+  // AGI SWARM
+  { key: 'agent-swarm', label: 'Agent Swarm', icon: Bot, group: 'AGI SWARM' },
+  { key: 'autonomous-execution', label: 'Autonomous', icon: Play, group: 'AGI SWARM' },
+  { key: 'analytics', label: 'Analytics', icon: BarChart3, group: 'AGI SWARM' },
+  { key: 'revenue-operations', label: 'Revenue Ops', icon: BarChart4, group: 'AGI SWARM' },
+  { key: 'verification', label: 'Verification', icon: ShieldCheck, group: 'AGI SWARM' },
+
+  // SYSTEM
+  { key: 'execution-center', label: 'Execution Center', icon: Zap, group: 'SYSTEM' },
+  { key: 'runtime-hub', label: 'Runtime Hub', icon: Activity, group: 'SYSTEM' },
+  { key: 'observability', label: 'Observability', icon: Eye, group: 'SYSTEM' },
+  { key: 'governance', label: 'Governance', icon: Settings, group: 'SYSTEM' },
 ];
 
-const NAV_GROUPS = ['OVERVIEW', 'SYSTEMS', 'OPERATIONS', 'INTELLIGENCE'] as const;
+const NAV_GROUPS = ['COMMAND CENTER', 'COMMERCE INTELLIGENCE', 'COMMERCE OPERATIONS', 'AGI SWARM', 'SYSTEM'] as const;
 
 const MODE_ICONS: Record<WorkspaceMode, React.ComponentType<{ className?: string }>> = {
-  builder: Hammer,
+  builder: Zap,
   operations: Activity,
-  strategy: Compass,
-  governance: Shield,
+  strategy: TrendingUp,
+  governance: ShieldCheck,
 };
 
 // ─── Sidebar Component ─────────────────────────────────────────
@@ -85,34 +107,34 @@ export function WorkspaceSidebar() {
   const setWorkspaceMode = useWorkspaceStore((s) => s.setWorkspaceMode);
   const agents = useWorkspaceStore((s) => s.agents);
 
-  const currentMode = workspace?.mode ?? 'builder';
+  const currentMode = workspace?.mode ?? 'operations';
   const activeAgents = agents.filter((a) => a.status === 'active' || a.status === 'busy').length;
 
   return (
-    <Sidebar collapsible="icon" className="bg-zinc-950 text-zinc-300 border-r border-zinc-800/60">
+    <Sidebar collapsible="icon" className="bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800/60">
       {/* ─── Branding ─── */}
-      <SidebarHeader className="p-4 pb-2">
-        <div className="flex items-center gap-2.5 px-1">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-800/80 ring-1 ring-zinc-700/50">
-            <Hexagon className="w-4.5 h-4.5 text-zinc-400" />
+      <SidebarHeader className="p-4 pb-3">
+        <div className="flex items-center gap-3 px-1">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 shadow-sm">
+            <Hexagon className="w-4 h-4 text-white" />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="text-sm font-semibold tracking-tight text-zinc-100">
+            <span className="text-sm font-semibold tracking-tight text-slate-900 dark:text-slate-50">
               Ameo AI
             </span>
-            <span className="text-[10px] font-medium text-zinc-500 tracking-wider uppercase">
-              Governed AI Platform
+            <span className="text-[10px] font-medium text-blue-600 dark:text-blue-400 tracking-wider uppercase">
+              Commerce OS
             </span>
           </div>
         </div>
       </SidebarHeader>
 
-      <SidebarSeparator className="bg-zinc-800/60 mx-3" />
+      <SidebarSeparator className="bg-slate-200 dark:bg-slate-800/60 mx-3" />
 
       {/* ─── Mode Switcher ─── */}
       <div className="px-3 pt-3 pb-1 group-data-[collapsible=icon]:px-2">
         <div className="group-data-[collapsible=icon]:hidden">
-          <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest px-1 mb-2">
+          <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-widest px-1 mb-2">
             Mode
           </p>
           <div className="flex flex-col gap-0.5">
@@ -125,11 +147,11 @@ export function WorkspaceSidebar() {
                   onClick={() => setWorkspaceMode(mode.key)}
                   className={cn(
                     'flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all duration-150',
-                    'hover:bg-zinc-800/80 hover:text-zinc-200',
-                    'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-600',
+                    'hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:text-slate-700 dark:hover:text-slate-300',
+                    'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500/50',
                     isActive
-                      ? 'bg-zinc-800 text-zinc-100 ring-1 ring-zinc-700/60'
-                      : 'text-zinc-500'
+                      ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 ring-1 ring-blue-200/60 dark:ring-blue-800/40'
+                      : 'text-slate-500 dark:text-slate-400'
                   )}
                 >
                   <ModeIcon className="w-3.5 h-3.5 shrink-0" />
@@ -141,7 +163,7 @@ export function WorkspaceSidebar() {
         </div>
       </div>
 
-      <SidebarSeparator className="bg-zinc-800/60 mx-3" />
+      <SidebarSeparator className="bg-slate-200 dark:bg-slate-800/60 mx-3" />
 
       {/* ─── Navigation ─── */}
       <ScrollArea className="flex-1 px-3 py-1">
@@ -150,7 +172,7 @@ export function WorkspaceSidebar() {
             const groupItems = NAV_ITEMS.filter((item) => item.group === group);
             return (
               <SidebarGroup key={group} className="px-0">
-                <SidebarGroupLabel className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest px-1">
+                <SidebarGroupLabel className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-widest px-1">
                   {group}
                 </SidebarGroupLabel>
                 <SidebarGroupContent>
@@ -165,8 +187,8 @@ export function WorkspaceSidebar() {
                             tooltip={item.label}
                             onClick={() => setActivePanel(item.key)}
                             className={cn(
-                              'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/80',
-                              isActive && 'text-zinc-100 bg-zinc-800 font-medium'
+                              'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80',
+                              isActive && 'text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/30 font-medium'
                             )}
                           >
                             <Icon className="w-4 h-4" />
@@ -190,23 +212,23 @@ export function WorkspaceSidebar() {
             <span
               className={cn(
                 'absolute inline-flex h-full w-full animate-ping rounded-full opacity-75',
-                workspace?.status === 'active' ? 'bg-emerald-500' : 'bg-zinc-500'
+                workspace?.status === 'active' ? 'bg-blue-500' : 'bg-slate-400'
               )}
             />
             <span
               className={cn(
                 'relative inline-flex h-2 w-2 rounded-full',
-                workspace?.status === 'active' ? 'bg-emerald-500' : 'bg-zinc-600'
+                workspace?.status === 'active' ? 'bg-blue-500' : 'bg-slate-400'
               )}
             />
           </span>
-          <span className="text-[11px] text-zinc-500 truncate group-data-[collapsible=icon]:hidden">
-            {workspace?.status === 'active' ? 'System Online' : 'System Offline'}
+          <span className="text-[11px] text-slate-400 dark:text-slate-500 truncate group-data-[collapsible=icon]:hidden">
+            {workspace?.status === 'active' ? 'Commerce OS Online' : 'Offline'}
           </span>
           {activeAgents > 0 && (
             <Badge
               variant="secondary"
-              className="ml-auto text-[10px] h-4 px-1.5 bg-zinc-800 text-zinc-400 border-zinc-700 group-data-[collapsible=icon]:hidden"
+              className="ml-auto text-[10px] h-4 px-1.5 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700 group-data-[collapsible=icon]:hidden"
             >
               {activeAgents}
             </Badge>

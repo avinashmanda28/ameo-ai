@@ -104,10 +104,10 @@ const itemVariants = {
 // ─── Constants ─────────────────────────────────────────────────
 
 const STATUS_DOT_COLORS: Record<RuntimeStatus, string> = {
-  active: 'bg-emerald-500',
-  inactive: 'bg-zinc-400',
+  active: 'bg-blue-500',
+  inactive: 'bg-slate-400',
   error: 'bg-red-500',
-  verifying: 'bg-amber-500',
+  verifying: 'bg-blue-400',
 };
 
 const STATUS_LABELS: Record<RuntimeStatus, string> = {
@@ -118,9 +118,9 @@ const STATUS_LABELS: Record<RuntimeStatus, string> = {
 };
 
 const ROLE_COLORS: Record<RuntimeRole, string> = {
-  primary: 'bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-400',
-  secondary: 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400',
-  fallback: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
+  primary: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+  secondary: 'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300',
+  fallback: 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400',
 };
 
 const ROLE_LABELS: Record<RuntimeRole, string> = {
@@ -144,14 +144,14 @@ const EMPTY_FORM = {
 // ─── Helpers ───────────────────────────────────────────────────
 
 function getHealthColor(score: number): string {
-  if (score >= 80) return 'bg-emerald-500';
-  if (score >= 50) return 'bg-amber-500';
+  if (score >= 80) return 'bg-blue-500';
+  if (score >= 50) return 'bg-slate-500';
   return 'bg-red-500';
 }
 
 function getHealthTextColor(score: number): string {
-  if (score >= 80) return 'text-emerald-600 dark:text-emerald-400';
-  if (score >= 50) return 'text-amber-600 dark:text-amber-400';
+  if (score >= 80) return 'text-blue-600 dark:text-blue-400';
+  if (score >= 50) return 'text-slate-600 dark:text-slate-400';
   return 'text-red-600 dark:text-red-400';
 }
 
@@ -173,7 +173,7 @@ function StarRating({ rating }: { rating: number }) {
           className={cn(
             'w-3.5 h-3.5',
             i < rating
-              ? 'text-amber-400 fill-amber-400'
+              ? 'text-slate-400 fill-slate-400'
               : 'text-zinc-300 dark:text-zinc-600'
           )}
         />
@@ -434,8 +434,8 @@ export function RuntimeHubPanel() {
       <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <div className="flex items-center gap-2.5 mb-1">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
-              <Cpu className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 ring-1 ring-primary/20">
+              <Cpu className="w-4 h-4 text-primary" />
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">
               Runtime Hub
@@ -482,7 +482,7 @@ export function RuntimeHubPanel() {
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
                     Active
                   </p>
-                  <p className="text-2xl font-bold tabular-nums text-emerald-600 dark:text-emerald-400">
+                  <p className="text-2xl font-bold tabular-nums text-blue-600 dark:text-blue-400">
                     {activeCount}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
@@ -491,8 +491,8 @@ export function RuntimeHubPanel() {
                       : 'No providers'}
                   </p>
                 </div>
-                <div className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0 bg-emerald-100 dark:bg-emerald-900/30">
-                  <Zap className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                <div className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0 bg-primary/10 ring-1 ring-primary/20">
+                  <Zap className="w-5 h-5 text-primary" />
                 </div>
               </div>
             </CardContent>
@@ -524,8 +524,8 @@ export function RuntimeHubPanel() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0 bg-sky-100 dark:bg-sky-900/30">
-                  <ShieldCheck className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                <div className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0 bg-blue-50 dark:bg-blue-900/20">
+                  <ShieldCheck className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
             </CardContent>
@@ -635,19 +635,19 @@ export function RuntimeHubPanel() {
                   </h4>
                   <ul className="space-y-1.5 text-xs text-muted-foreground">
                     <li className="flex items-start gap-2">
-                      <span className="w-1 h-1 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                      <span className="w-1 h-1 rounded-full bg-primary mt-1.5 shrink-0" />
                       Connect multiple providers simultaneously for high availability
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="w-1 h-1 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                      <span className="w-1 h-1 rounded-full bg-primary mt-1.5 shrink-0" />
                       Automatic failover from primary to secondary and fallback providers
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="w-1 h-1 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                      <span className="w-1 h-1 rounded-full bg-primary mt-1.5 shrink-0" />
                       Real-time health monitoring with configurable thresholds
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="w-1 h-1 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                      <span className="w-1 h-1 rounded-full bg-primary mt-1.5 shrink-0" />
                       Per-provider rate limiting and cost management
                     </li>
                   </ul>

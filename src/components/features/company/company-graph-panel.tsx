@@ -88,18 +88,18 @@ const ICON_MAP: Record<CompanyType, React.ComponentType<{ className?: string }>>
 };
 
 const TYPE_BADGE_COLORS: Record<CompanyType, string> = {
-  company: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-  project: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  product: 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
-  service: 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400',
-  team: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400',
+  company: 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary',
+  project: 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary',
+  product: 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary',
+  service: 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary',
+  team: 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary',
   member: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400',
 };
 
 const STATUS_DOT: Record<CompanyStatus, string> = {
-  active: 'bg-emerald-500',
+  active: 'bg-blue-500',
   inactive: 'bg-zinc-400',
-  archived: 'bg-amber-500',
+  archived: 'bg-slate-400',
 };
 
 const TYPE_OPTIONS: { value: CompanyType; label: string }[] = [
@@ -482,7 +482,7 @@ function EntityDetail({ company, allCompanies, onClose, onUpdate, onDelete }: En
               />
               <span className={cn(
                 'text-xs font-medium capitalize',
-                company.status === 'active' ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground'
+                company.status === 'active' ? 'text-blue-600 dark:text-blue-400' : 'text-muted-foreground'
               )}>
                 {company.status}
               </span>
@@ -990,8 +990,8 @@ export function CompanyGraphPanel() {
         {/* Header */}
         <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
-              <GitBranch className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400" />
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10 dark:bg-primary/20">
+              <GitBranch className="w-4.5 h-4.5 text-primary dark:text-primary" />
             </div>
             <div>
               <h1 className="text-lg font-bold tracking-tight text-foreground">Company Graph</h1>
